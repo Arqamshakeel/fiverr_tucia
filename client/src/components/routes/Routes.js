@@ -1,38 +1,43 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import Test from "../Test";
-
-import VehicleScreenMain from "../Screens/Vehicles/Main";
-import UserScreenMain from "../Screens/Users/Main";
-// import General from "../Screens/general/General";
-import GeneralTabs from "../Screens/general/GeneralTabs";
-import Search from "../Screens/dispatcher panel/search/Search";
-import Dispatcher from "../Screens/dispatcher panel/dispatcherScreen/Dispatcher";
-import ClosedJobs from "../Screens/dispatcher panel/closedjobs/ClosedJobs";
-import AddVehicle from "../Screens/Vehicles/VehiclesTab/AddVehicle";
-import AddUser from "../Screens/Users/UsersTab/AddUser";
-import Suspensions from "../Screens/dispatcher panel/DriverSuspensions/Suspensions";
-import Customers from "../Screens/dispatcher panel/Customers/Customers";
-
+import Home from "../home/Home";
+import BottomNav from "../Bottom navigation/BottomNav";
+import SignInSide from "../LoginAndSignUp/SignInSide";
+import { useMediaQuery } from "react-responsive";
+import SignUp from "../LoginAndSignUp/SignUp";
+import Checkout from "../order/Checkout";
+import UserDashboard from "../userDashboard/UserDashboard";
+import AdminDashboard from "../adminDashboard/AdminDashboard";
 const Routes = () => {
+  const isDesktopOrLaptop = useMediaQuery({
+    query: "(min-device-width: 1224px)",
+  });
+  const isBigScreen = useMediaQuery({ query: "(min-device-width: 1824px)" });
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
+  const isTabletOrMobileDevice = useMediaQuery({
+    query: "(max-device-width: 700px)",
+  });
+  const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
+  const isRetina = useMediaQuery({ query: "(min-resolution: 2dppx)" });
   return (
-    <Switch>
-      <Route path="/" exact component={Test} />
-      <Route
-        path="/dispatch/vehicles/edit"
-        exact
-        component={VehicleScreenMain}
-      />
-      <Route path="/dispatch/vehicles/add" exact component={AddVehicle} />
-      <Route path="/dispatch/users/add" exact component={AddUser} />
-      <Route path="/dispatch/general" exact component={GeneralTabs} />
-      <Route path="/dispatch/dispatcher" exact component={Dispatcher} />
-      <Route path="/dispatch/search" exact component={Search} />
-      <Route path="/dispatch/users/edit" exact component={UserScreenMain} />
-      <Route path="/dispatch/closedjobs" exact component={ClosedJobs} />
-      <Route path="/dispatch/suspensions" exact component={Suspensions} />
-      <Route path="/dispatch/customers" exact component={Customers} />
-    </Switch>
+    <div>
+      <Switch>
+        <Route path="/" exact component={Home} />
+        <Route path="/signin" exact component={SignInSide} />
+        <Route path="/signup" exact component={SignUp} />
+        <Route path="/order" exact component={Checkout} />
+        <Route path="/userdashboard" exact component={UserDashboard} />
+        <Route path="/admindashboard" exact component={AdminDashboard} />
+      </Switch>
+
+      {isTabletOrMobileDevice ? (
+        <div style={{ marginTop: "80px" }}></div>
+      ) : (
+        <></>
+      )}
+      {isTabletOrMobileDevice ? <BottomNav /> : <></>}
+    </div>
   );
 };
 export default Routes;
