@@ -1,5 +1,6 @@
 import React from "react";
 import { Grid, Paper, Box, Button } from "@material-ui/core";
+import GoogleDrive from "../googleDrive/GoogleDrive";
 const Home = (props) => {
   return (
     <Grid container>
@@ -15,6 +16,8 @@ const Home = (props) => {
           >
             Get started
           </Button>
+
+          <GoogleDrive />
         </Box>
         <Box display="flex" justifyContent="center" alignItems="center">
           {" "}

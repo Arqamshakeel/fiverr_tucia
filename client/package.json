@@ -17,6 +17,7 @@
     "moment-timezone": "^0.5.31",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-google-picker": "^0.1.0",
     "react-responsive": "^8.1.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3"
