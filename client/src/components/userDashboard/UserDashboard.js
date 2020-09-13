@@ -30,12 +30,16 @@ function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
 }
 
+// const rows = [
+//   createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
+//   createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
+//   createData("Eclair", 262, 16.0, 24, 6.0),
+//   createData("Cupcake", 305, 3.7, 67, 4.3),
+//   createData("Gingerbread", 356, 16.0, 49, 3.9),
+// ];
 const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
+  createData("76qdf727q", "Beauty/Retouching", "24 hours", "$8.0", "Pending"),
+  createData("3423jjkn2", "Face swap", "24 hours", "$16.0", "completed"),
 ];
 
 const useStyles = makeStyles({
@@ -53,11 +57,11 @@ export default function UserDashboard() {
       <Table className={classes.table} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>Dessert (100g serving)</StyledTableCell>
-            <StyledTableCell align="right">Calories</StyledTableCell>
-            <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
-            <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
-            <StyledTableCell align="right">Protein&nbsp;(g)</StyledTableCell>
+            <StyledTableCell>Order ID</StyledTableCell>
+            <StyledTableCell align="right">Order Type</StyledTableCell>
+            <StyledTableCell align="right">Estimated Time</StyledTableCell>
+            <StyledTableCell align="right">Paid Amount</StyledTableCell>
+            <StyledTableCell align="right">Status</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>

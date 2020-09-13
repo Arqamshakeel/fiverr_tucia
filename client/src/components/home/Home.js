@@ -17,6 +17,10 @@ const Home = (props) => {
             Get started
           </Button>
         </Box>
+        <Box display="flex" justifyContent="center" alignItems="center">
+          {" "}
+          This only Page is in construction...
+        </Box>
       </Grid>
       <Grid item xs={12} md={6} lg={4}></Grid>
     </Grid>

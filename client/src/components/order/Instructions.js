@@ -7,6 +7,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import { TextField } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
@@ -17,14 +18,16 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Instructions() {
+export default function Instructions({ clicked, setClicked }) {
   const classes = useStyles();
 
+  //   React.useEffect(() => {}, [clicked]);
   return (
     <Card className={classes.root}>
       <CardActionArea
         onClick={() => {
           console.log("card clicked");
+          setClicked(true);
         }}
       >
         <CardMedia

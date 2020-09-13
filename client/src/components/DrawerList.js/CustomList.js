@@ -13,10 +13,11 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import StarBorder from "@material-ui/icons/StarBorder";
-
+import DashboardIcon from "@material-ui/icons/Dashboard";
 import { withRouter } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import HomeIcon from "@material-ui/icons/Home";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,10 +63,25 @@ const CustomList = (props) => {
         <ListItemIcon>
           <InboxIcon />
         </ListItemIcon>
-        <ListItemText primary="Product" />
+        <ListItemText primary="Shortcuts" />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItem
+            button
+            className={classes.nested}
+            onClick={() => {
+              props.history.push("/");
+              if (isTabletOrMobileDevice) props.handleDrawerToggle();
+            }}
+          >
+            <ListItemIcon>
+              <HomeIcon />
+            </ListItemIcon>
+            <ListItemText primary="Home" />
+          </ListItem>
+        </List>
         <List component="div" disablePadding>
           <ListItem
             button
@@ -121,7 +137,7 @@ const CustomList = (props) => {
             }}
           >
             <ListItemIcon>
-              <SendIcon />
+              <DashboardIcon />
             </ListItemIcon>
             <ListItemText primary="User Dashboard" />
           </ListItem>
@@ -136,7 +152,7 @@ const CustomList = (props) => {
             }}
           >
             <ListItemIcon>
-              <SendIcon />
+              <DashboardIcon />
             </ListItemIcon>
             <ListItemText primary="Admin Dashboard" />
           </ListItem>
