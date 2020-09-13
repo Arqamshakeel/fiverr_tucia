@@ -23,9 +23,6 @@ export default function SimpleBackdrop({ open, setOpen }) {
 
   return (
     <div>
-      {/* <Button variant="outlined" color="primary" onClick={handleToggle}>
-        Show backdrop
-      </Button> */}
       <Backdrop className={classes.backdrop} open={open}>
         <CircularProgress color="inherit" />
       </Backdrop>

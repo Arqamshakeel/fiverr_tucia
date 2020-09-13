@@ -2,7 +2,6 @@ import React from "react";
 import { Grid, Paper, Box, Button } from "@material-ui/core";
 const Home = (props) => {
   return (
-    // <Paper>
     <Grid container>
       <Grid item xs={12} md={6} lg={4}></Grid>
       <Grid item xs={12} md={6} lg={4}>
@@ -24,7 +23,6 @@ const Home = (props) => {
       </Grid>
       <Grid item xs={12} md={6} lg={4}></Grid>
     </Grid>
-    // </Paper>
   );
 };
 
