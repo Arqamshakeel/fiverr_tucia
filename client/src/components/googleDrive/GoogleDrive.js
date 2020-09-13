@@ -6,7 +6,7 @@ class GoogleDrive extends Component {
     return (
       <GooglePicker
         clientId={
-          "813941084846-dsedlk0c7op0uut409feall0vfbkmse3.apps.googleusercontent.com"
+          "16778408863-1705lr9huv7bem59hs6ar6glsq8rne9l.apps.googleusercontent.com"
         }
         developerKey={"AIzaSyC1fxfZV5X-l24KH67B5LuAAD25nNTWgYk"}
         scope={["https://www.googleapis.com/auth/drive.readonly"]}
