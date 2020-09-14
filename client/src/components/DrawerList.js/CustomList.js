@@ -97,6 +97,21 @@ const CustomList = (props) => {
             <ListItemText primary="Sign in" />
           </ListItem>
         </List>
+        <List component="div" disablePadding>
+          <ListItem
+            button
+            className={classes.nested}
+            onClick={() => {
+              props.history.push("/pricing");
+              if (isTabletOrMobileDevice) props.handleDrawerToggle();
+            }}
+          >
+            <ListItemIcon>
+              <AccountCircleIcon />
+            </ListItemIcon>
+            <ListItemText primary="Pricing" />
+          </ListItem>
+        </List>
         <List
           component="div"
           disablePadding

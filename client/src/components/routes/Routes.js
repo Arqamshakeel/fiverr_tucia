@@ -5,10 +5,12 @@ import Home from "../home/Home";
 import BottomNav from "../Bottom navigation/BottomNav";
 import SignInSide from "../LoginAndSignUp/SignInSide";
 import { useMediaQuery } from "react-responsive";
-import SignUp from "../LoginAndSignUp/SignUp";
+import Signup2 from "../LoginAndSignUp/Signup2";
 import Checkout from "../order/Checkout";
 import UserDashboard from "../userDashboard/UserDashboard";
 import AdminDashboard from "../adminDashboard/AdminDashboard";
+import Pricing from "../pricing/Pricing";
+import Footer from "../footer/Footer";
 const Routes = () => {
   const isDesktopOrLaptop = useMediaQuery({
     query: "(min-device-width: 1224px)",
@@ -25,12 +27,13 @@ const Routes = () => {
       <Switch>
         <Route path="/" exact component={Home} />
         <Route path="/signin" exact component={SignInSide} />
-        <Route path="/signup" exact component={SignUp} />
+        <Route path="/signup" exact component={Signup2} />
         <Route path="/order" exact component={Checkout} />
         <Route path="/userdashboard" exact component={UserDashboard} />
         <Route path="/admindashboard" exact component={AdminDashboard} />
+        <Route path="/pricing" exact component={Pricing} />
       </Switch>
-
+      <Footer />
       {isTabletOrMobileDevice ? (
         <div style={{ marginTop: "80px" }}></div>
       ) : (

@@ -123,7 +123,7 @@ const SignInSide = (props) => {
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
-              variant="outlined"
+              variant="filled"
               margin="normal"
               required
               fullWidth
@@ -134,7 +134,7 @@ const SignInSide = (props) => {
             />
             {/* <SnackBar open={open} setOpen={setOpen} msg={msg} /> */}
             <TextField
-              variant="outlined"
+              variant="filled"
               margin="normal"
               required
               fullWidth

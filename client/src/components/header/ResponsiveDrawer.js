@@ -18,6 +18,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Routes from "../routes/Routes";
 import CustomList from "../DrawerList.js/CustomList";
+import { Button, Box, Grid } from "@material-ui/core";
+import { withRouter } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -91,9 +93,34 @@ function ResponsiveDrawer(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
-            Tucia
-          </Typography>
+
+          <Grid container>
+            <Grid item xs={12}>
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <Button
+                  onClick={() => {
+                    props.history.push("/order");
+                  }}
+                >
+                  Get started
+                </Button>
+                <Button
+                  onClick={() => {
+                    props.history.push("/pricing");
+                  }}
+                >
+                  Pricing
+                </Button>
+                <Button
+                  onClick={() => {
+                    props.history.push("/signup");
+                  }}
+                >
+                  Sign up
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">
@@ -143,4 +170,4 @@ ResponsiveDrawer.propTypes = {
   window: PropTypes.func,
 };
 
-export default ResponsiveDrawer;
+export default withRouter(ResponsiveDrawer);
