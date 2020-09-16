@@ -5,12 +5,19 @@ import Axios from "axios";
 import Blog from "../landingPage/Blog";
 const Home = (props) => {
   const handleImage = (data) => {
-    Axios.post("/upload")
-      .then((res) => {})
+    Axios.get("http://localhost:4000/users")
+      .then((res) => {
+        console.log(res);
+      })
       .catch((error) => {});
   };
+
+  React.useEffect(handleImage, []);
   return (
-    <Blog />
+    <div>
+      {/* <GoogleDrive /> */}
+      <Blog />
+    </div>
 
     // <Grid container>
     //   <Grid item xs={12} md={6} lg={4}></Grid>

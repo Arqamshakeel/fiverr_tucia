@@ -11,6 +11,8 @@ import UserDashboard from "../userDashboard/UserDashboard";
 import AdminDashboard from "../adminDashboard/AdminDashboard";
 import Pricing from "../pricing/Pricing";
 import Footer from "../footer/Footer";
+import OrderSequence from "../orderSequence/OrderSequence";
+import Order2 from "../orderSequence/Order2";
 const Routes = () => {
   const isDesktopOrLaptop = useMediaQuery({
     query: "(min-device-width: 1224px)",
@@ -28,7 +30,7 @@ const Routes = () => {
         <Route path="/" exact component={Home} />
         <Route path="/signin" exact component={SignInSide} />
         <Route path="/signup" exact component={Signup2} />
-        <Route path="/order" exact component={Checkout} />
+        <Route path="/order" exact component={Order2} />
         <Route path="/userdashboard" exact component={UserDashboard} />
         <Route path="/admindashboard" exact component={AdminDashboard} />
         <Route path="/pricing" exact component={Pricing} />

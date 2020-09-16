@@ -3,6 +3,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+var cors = require("cors");
 
 //var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -15,6 +16,7 @@ const GridFsStorage = require("multer-gridfs-storage");
 const Grid = require("gridfs-stream");
 //
 var app = express();
+app.use(cors());
 const methodOverride = require("method-override");
 app.use(methodOverride("_method"));
 // view engine setup
@@ -88,6 +90,10 @@ app.post("/upload", upload.single("file"), (req, res) => {
   res.json({ file: req.file });
   console.log("hello");
   console.log(req.file);
+});
+app.get("/data", (req, res) => {
+  console.log("hello g");
+  return res.send("hello");
 });
 
 // catch 404 and forward to error handler
