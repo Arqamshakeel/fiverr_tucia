@@ -1,23 +1,104 @@
 import React from "react";
-import { Grid, Paper, Box, Button, FormControl } from "@material-ui/core";
+import {
+  Grid,
+  Paper,
+  Box,
+  Button,
+  FormControl,
+  Typography,
+} from "@material-ui/core";
 import GoogleDrive from "../googleDrive/GoogleDrive";
+import PropTypes from "prop-types";
 import Axios from "axios";
+import { Progress } from "reactstrap";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import Blog from "../landingPage/Blog";
+function LinearProgressWithLabel(props) {
+  return (
+    <Box display="flex" alignItems="center">
+      <Box width="100%" mr={1}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box minWidth={35}>
+        <Typography variant="body2" color="textSecondary">{`${Math.round(
+          props.value
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
+LinearProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate and buffer variants.
+   * Value between 0 and 100.
+   */
+  value: PropTypes.number.isRequired,
+};
 const Home = (props) => {
+  const [selectedFile, setSelectedFile] = React.useState(null);
+  const [loaded, setLoaded] = React.useState(0);
+  const onChangeHandler = (event) => {
+    console.log(event.target.files[0]);
+    setSelectedFile(event.target.files);
+    // console.log(selectedFile);
+  };
+  const onClickHandler = () => {
+    const data = new FormData();
+    for (var x = 0; x < selectedFile.length; x++) {
+      data.append("file", selectedFile[x]);
+    }
+    Axios.post("http://localhost:4000/upload", data, {
+      // receive two    parameter endpoint url ,form data
+      onUploadProgress: (ProgressEvent) => {
+        setLoaded((ProgressEvent.loaded / ProgressEvent.total) * 100);
+      },
+    }).then((res) => {
+      // then print response status
+      console.log(res.statusText);
+    });
+  };
   const handleImage = (data) => {
-    Axios.get("http://localhost:4000/users")
+    Axios.get("http://localhost:4000/data")
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
       })
       .catch((error) => {});
+    // Axios.post("http://localhost:4000/upload", data)
+    //   .then((res) => {
+    //     // console.log(res);
+    //   })
+    //   .catch((error) => {});
   };
 
-  React.useEffect(handleImage, []);
+  // React.useEffect(handleImage, []);
   return (
-    <div>
-      {/* <GoogleDrive /> */}
-      <Blog />
-    </div>
+    // <div>
+    //   <Button
+    //     style={{ marginTop: "10px" }}
+    //     variant="contained"
+    //     component="label"
+    //     //   className={classes.TextFieldMarginTop}
+    //   >
+    //     Upload Picture
+    //     <input
+    //       type="file"
+    //       name="file"
+    //       id="file"
+    //       style={{ display: "none" }}
+    //       multiple
+    //       // accept="image/*"
+    //       onChange={(event) => {
+    //         handleImage(event);
+    //       }}
+    //     />
+    //   </Button>
+    // </div>
+
+    // <div>
+    //   {/* <GoogleDrive /> */}
+    //   <Blog />
+    // </div>
 
     // <Grid container>
     //   <Grid item xs={12} md={6} lg={4}></Grid>
@@ -35,15 +116,66 @@ const Home = (props) => {
 
     //       <GoogleDrive /> */}
 
-    //       <form action="upload" method="POST" encType="multipart/form-data">
-    //         <input type="file" name="file" id="file"></input>
-    //         <label htmlFor="file">Choose file</label>
+    // <form action="upload" method="POST" encType="multipart/form-data">
+    //   <Button
+    //     style={{ marginTop: "10px" }}
+    //     variant="contained"
+    //     component="label"
+    //     // className={classes.TextFieldMarginTop}
+    //   >
+    //     Upload Picture
+    //     <input
+    //       type="file"
+    //       name="file"
+    //       id="file"
+    //       style={{ display: "none" }}
+    //       // multiple
+    //       // accept="image/*"
+    //       // onChange={(event) => {
+    //       //   handleImage(event);
+    //       // }
+    //     />
+    //   </Button>
+    //   <Button type="submit"> upload</Button>
+    // </form>
+    <div>
+      <input type="file" name="file" multiple onChange={onChangeHandler} />
+      <Button variant="contained" color="primary" onClick={onClickHandler}>
+        Upload
+      </Button>
+      <div class="form-group">
+        <Progress max="100" color="success" value={loaded}>
+          {Math.round(loaded, 2)}%
+        </Progress>
+      </div>
+      <LinearProgressWithLabel value={loaded} />
+    </div>
+    // <div>
+    //   <Button
+    //     style={{ marginTop: "10px" }}
+    //     variant="contained"
+    //     component="label"
+    //     //   className={classes.TextFieldMarginTop}
+    //   >
+    //     Upload Picture
+    //     <input
+    //       type="file"
+    //       name="file"
+    //       id="file"
+    //       style={{ display: "none" }}
+    //       // multiple
+    //       // accept="image/*"
+    //       onChange={(event) => {
+    //         handleImage(event);
+    //       }}
+    //     />
+    //   </Button>
+    //   <Button type="submit"> upload</Button>
+    // </div>
+    // <form action="upload" method="POST" encType="multipart/form-data">
 
-    //         <input type="submit" value="submit" />
-    //       </form>
-
-    //       <FormControl fullWidth>
-    //         {/* <InputLabel id="demo-simple-select-outlined-label">
+    // <FormControl fullWidth>
+    //   {/* <InputLabel id="demo-simple-select-outlined-label">
     //               Tags
     //             </InputLabel>
     //             <Select
@@ -60,23 +192,24 @@ const Home = (props) => {
     //               <MenuItem value={"citi"}>Drinks</MenuItem>
     //               <MenuItem value={"canal"}>Chocolates</MenuItem>
     //             </Select> */}
-    //         <Button
-    //           style={{ marginTop: "10px" }}
-    //           variant="contained"
-    //           component="label"
-    //           //   className={classes.TextFieldMarginTop}
-    //         >
-    //           Upload Picture
-    //           <input
-    //             type="file"
-    //             style={{ display: "none" }}
-    //             accept="image/*"
-    //             onChange={(event) => {
-    //               handleImage(event);
-    //             }}
-    //           />
-    //         </Button>
-    //       </FormControl>
+    //   <Button
+    //     style={{ marginTop: "10px" }}
+    //     variant="contained"
+    //     component="label"
+    //     //   className={classes.TextFieldMarginTop}
+    //   >
+    //     Upload Picture
+    //     <input
+    //       type="file"
+    //       style={{ display: "none" }}
+    //       accept="image/*"
+    //       onChange={(event) => {
+    //         handleImage(event.target.files[0]);
+    //         console.log(event.target.files);
+    //       }}
+    //     />
+    //   </Button>
+    // </FormControl>
     //     </Box>
     //     {/* <Box display="flex" justifyContent="center" alignItems="center">
     //       {" "}

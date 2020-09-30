@@ -42,7 +42,7 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import { withRouter } from "react-router";
 import HomeIcon from "@material-ui/icons/Home";
 
-// import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 //import { decrement, zero } from "../../Redux/actions/CartBadgeAction";
 // import { set } from "../../Redux/actions/CartBadgeAction";
 // import { setOrder, incrementOrder } from "../../Redux/actions/OrderBadgeAction";
@@ -60,7 +60,7 @@ import BottomNav from "../Bottom navigation/BottomNav";
 import { Button, Avatar, InputAdornment } from "@material-ui/core";
 // import userService from "../../services/UserService";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-// import { switchLogin, falseLogin } from "../../Redux/actions/LoginAction";
+import { switchLogin, falseLogin } from "../../Redux/actions/LoginAction";
 import { red } from "@material-ui/core/colors";
 import Tooltip from "@material-ui/core/Tooltip";
 // import CustomList from "../List/CustomList";
@@ -74,6 +74,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Routes from "../routes/Routes";
+import CustomList from "../DrawerList.js/CustomList";
+import userService from "../../services/UserService";
 
 // import ShowWithSearch2 from "../products/ShowWithSearch2";
 // import ShowExpired from "../products/ShowExpired";
@@ -233,8 +235,10 @@ function CustomHeader(props) {
   const [top100Films, setTop100Films] = React.useState([]);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  //   const isLoggedInRedux = useSelector((state) => state.login.isloggedin);
-  //   const dispatch = useDispatch();
+  const isLoggedInRedux = useSelector((state) => state.login.isloggedin);
+  console.log("Is logged in header line 239: " + isLoggedInRedux);
+  // console.log("Is logged in header: " + userService.isLoggedin());
+  const dispatch = useDispatch();
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -316,11 +320,11 @@ function CustomHeader(props) {
   //       // dispatch(incrementOrder());
   //     });
   //   }, []);
-  //   React.useEffect(() => {
-  //     if (userService.isLoggedin()) {
-  //       dispatch(switchLogin());
-  //     }
-  //   }, []);
+  React.useEffect(() => {
+    if (userService.isLoggedin()) {
+      dispatch(switchLogin());
+    }
+  }, []);
   //   React.useEffect(() => {
   //     productService.getProductsname().then((res) => {
   //       setTop100Films(res);
@@ -381,7 +385,7 @@ function CustomHeader(props) {
 
       <Divider />
 
-      {/* {userService.isLoggedin() ? (
+      {userService.isLoggedin() ? (
         <MenuItem
           onClick={() => {
             //props.history.push("/signup");
@@ -407,7 +411,7 @@ function CustomHeader(props) {
           </IconButton>
           <p>Sign in</p>
         </MenuItem>
-      )} */}
+      )}
       <Divider />
       <MenuItem
         onClick={() => {
@@ -424,7 +428,7 @@ function CustomHeader(props) {
       </MenuItem>
 
       <Divider />
-      {/* {userService.isAdmin() ? (
+      {userService.isAdmin() ? (
         <MenuItem
           onClick={() => {
             props.history.push("/allorders");
@@ -432,7 +436,7 @@ function CustomHeader(props) {
           }}
         >
           <IconButton aria-label="show 11 new notifications" color="inherit">
-            <Badge badgeContent={orderBadge} color="secondary">
+            <Badge badgeContent={10} color="secondary">
               <MessageIcon />
             </Badge>
           </IconButton>
@@ -450,98 +454,14 @@ function CustomHeader(props) {
           </IconButton>
           <p>Send Order</p>
         </MenuItem>
-      )} */}
+      )}
     </Menu>
   );
   const drawer = (
     <div>
       <div className={classes.toolbar} />
-
+      <CustomList handleDrawerToggle={handleDrawerToggle} />
       <Divider />
-      <List>
-        <ListItem
-          button
-          onClick={() => {
-            props.history.push("/");
-
-            if (isTabletOrMobileDevice) handleDrawerToggle();
-          }}
-        >
-          <ListItemIcon>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Home"} />
-        </ListItem>
-        <Divider />
-
-        <ListItem
-          button
-          onClick={() => {
-            props.history.push("/orderform2");
-            if (isTabletOrMobileDevice) handleDrawerToggle();
-          }}
-        >
-          <ListItemIcon>
-            <SendIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Order Form"} />
-        </ListItem>
-        <Divider />
-        {/* {userService.isLoggedin() ? (
-          <ListItem
-            button
-            onClick={() => {
-              userService.logout();
-              dispatch(falseLogin());
-              if (isTabletOrMobileDevice) handleDrawerToggle();
-            }}
-          >
-            <ListItemIcon>
-              <ExitToAppIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Sign out"} />
-          </ListItem>
-        ) : (
-          <ListItem
-            button
-            onClick={() => {
-              props.history.push("/signin");
-              if (isTabletOrMobileDevice) handleDrawerToggle();
-            }}
-          >
-            <ListItemIcon>
-              <AccountCircleIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Sign in"} />
-          </ListItem>
-        )} */}
-        <Divider />
-        <ListItem
-          button
-          onClick={() => {
-            props.history.push("/signup");
-            if (isTabletOrMobileDevice) handleDrawerToggle();
-          }}
-        >
-          <ListItemIcon>
-            <AccountCircleIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Register"} />
-        </ListItem>
-        <Divider />
-        {/* {userService.isAdmin() ? (
-          <CustomList
-            isTabletOrMobile={isTabletOrMobileDevice}
-            handleDrawerToggle={handleDrawerToggle}
-          />
-        ) : (
-          <></>
-        )} */}
-        {/* <ProductCategory
-          isTabletOrMobile={isTabletOrMobileDevice}
-          handleDrawerToggle={handleDrawerToggle}
-        /> */}
-      </List>
     </div>
   );
 
@@ -608,14 +528,14 @@ function CustomHeader(props) {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            {/* {isLoggedInRedux ? (
+            {isLoggedInRedux ? (
               <span>
                 <Button
                   variant="contained"
                   color="secondary"
                   onClick={() => {
-                    // userService.logout();
-                    // dispatch(falseLogin());
+                    userService.logout();
+                    dispatch(falseLogin());
                   }}
                 >
                   <Typography variant="button" variant="h6">
@@ -651,8 +571,8 @@ function CustomHeader(props) {
                   </Typography>
                 </Button>
               </div>
-            )} */}
-            {/* {isLoggedInRedux && userService.isAdmin() ? (
+            )}
+            {isLoggedInRedux && userService.isAdmin() ? (
               <IconButton
                 aria-label="show 4 new mails"
                 color="inherit"
@@ -660,13 +580,13 @@ function CustomHeader(props) {
                   props.history.push("/allorders");
                 }}
               >
-                <Badge badgeContent={orderBadge} color="secondary">
+                <Badge badgeContent={10} color="secondary">
                   <MessageIcon />
                 </Badge>
               </IconButton>
             ) : (
               <></>
-            )} */}
+            )}
             <IconButton
               aria-label="show 17 new notifications"
               color="inherit"
@@ -699,7 +619,12 @@ function CustomHeader(props) {
             >
               <AccountCircle />
             </IconButton> */}
-            {/* {isLoggedInRedux ? (
+            <div>
+              {userService.getloggedinuser()
+                ? userService.getloggedinuser()._id
+                : null}
+            </div>
+            {isLoggedInRedux ? (
               <Tooltip title={userService.getloggedinuser().name}>
                 <span style={{ margin: "auto", marginLeft: "10px" }}>
                   <Avatar aria-label="recipe" className={classes.avatar}>
@@ -711,7 +636,7 @@ function CustomHeader(props) {
               </Tooltip>
             ) : (
               <></>
-            )} */}
+            )}
           </div>
 
           <div className={classes.sectionMobile}>

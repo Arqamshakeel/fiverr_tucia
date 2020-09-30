@@ -15,6 +15,7 @@ import Paper from "@material-ui/core/Paper";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import { Button, Grid } from "@material-ui/core";
+import orderServices from "../../services/OrderServices";
 
 const useRowStyles = makeStyles({
   root: {
@@ -42,8 +43,64 @@ function createData(name, calories, fat, carbs, protein, price) {
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
-  const classes = useRowStyles();
 
+  const classes = useRowStyles();
+  const getFilesAfterOpen = () => {
+    setOpen(!open);
+    console.log("Opened slide");
+    console.log("Row: " + row._id);
+
+    orderServices
+      .getFilesAndDownload(row.F_Id)
+      .then((res) => {
+        console.log(res);
+        props.setDownloadLinks(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const download = () => {
+    console.log(props.downloadLinks[0]);
+    // fake server request, getting the file url as response
+    setTimeout(() => {
+      const response = {
+        // file: "http://localhost:4000/down/00a5d83a7e5b79f52ad8006a3aa58c52.mp4",
+        file: "http://localhost:4000/down/" + props.downloadLinks[0],
+      };
+      // server sent the url to the file!
+      // now, let's download:
+      // for (let index = 0; index < response.file.length; index++) {
+      // window.location.href = response.file;
+
+      props.downloadLinks.map((item, index) => {
+        // window.location.href = "http://localhost:4000/down/" + item;
+        window.open("http://localhost:4000/down/" + item);
+      });
+      // you could also do:
+      // window.open(response.file);
+    }, 100);
+  };
+  // const getFilesAndDownloadAfterClick = () => {
+  //   orderServices
+  //     .getFilesAndDownloadtemp()
+  //     .then((res) => {
+  //       console.log(res);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+  const getFilesAndDownloadAfterClick = () => {
+    orderServices
+      .getFilesAndDownload(row.F_Id)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <React.Fragment>
       <TableRow className={classes.root}>
@@ -51,17 +108,17 @@ function Row(props) {
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}
+            onClick={getFilesAfterOpen}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.name}
+          {row._id}
         </TableCell>
-        <TableCell align="right">{row.calories}</TableCell>
-        <TableCell align="right">{row.fat}</TableCell>
-        <TableCell align="right">{row.carbs}</TableCell>
+        <TableCell align="right">{row.service_Category.catergory}</TableCell>
+        <TableCell align="right">{row.service_Category.time}</TableCell>
+        <TableCell align="right">{row.service_Category.price}</TableCell>
         <TableCell align="right">{row.protein}</TableCell>
       </TableRow>
       <TableRow>
@@ -72,20 +129,11 @@ function Row(props) {
                 Instructions
               </Typography>
               <Typography variant="h6" gutterBottom component="div">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Commodi unde similique beatae. Pariatur nihil voluptatum
-                quibusdam beatae eos animi deserunt consequuntur harum adipisci
-                ex deleniti accusamus veniam, alias inventore facere.
+                {row.comments}
               </Typography>
 
               <Grid container>
-                <Grid item xs={8}>
-                  <img
-                    width="80%"
-                    src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Aspect_ratio_16_9_example.jpg"
-                    alt=""
-                  />
-                </Grid>
+                <Grid item xs={8}></Grid>
                 <Grid item xs={4}>
                   <Box
                     display="flex"
@@ -93,8 +141,12 @@ function Row(props) {
                     alignItems="center"
                     css={{ height: "100%" }}
                   >
-                    <Button variant="contained" color="primary">
-                      Download Image
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={download}
+                    >
+                      Download Files
                     </Button>
                   </Box>
                 </Grid>
@@ -107,30 +159,28 @@ function Row(props) {
   );
 }
 
-Row.propTypes = {
-  row: PropTypes.shape({
-    calories: PropTypes.isRequired,
-    carbs: PropTypes.isRequired,
-    fat: PropTypes.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-      })
-    ).isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.isRequired,
-    protein: PropTypes.isRequired,
-  }).isRequired,
-};
-
 const rows = [
   createData("76qdf727q", "Beauty/Retouching", "24 hours", "$8.0", "Pending"),
   createData("3423jjkn2", "Face swap", "24 hours", "$16.0", "completed"),
 ];
 
 export default function AdminDashboard() {
+  const [allOrders, setAllOrders] = React.useState([]);
+  const [downloadLinks, setDownloadLinks] = React.useState([]);
+  const getOrder = () => {
+    orderServices
+      .getFinalOrder()
+      .then((data) => {
+        console.log(data);
+        setAllOrders(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  React.useEffect(getOrder, []);
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -145,8 +195,14 @@ export default function AdminDashboard() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <Row key={row.name} row={row} />
+          {allOrders.map((row, index) => (
+            <Row
+              downloadLinks={downloadLinks}
+              setDownloadLinks={setDownloadLinks}
+              allOrders={allOrders}
+              key={index}
+              row={row}
+            />
           ))}
         </TableBody>
       </Table>

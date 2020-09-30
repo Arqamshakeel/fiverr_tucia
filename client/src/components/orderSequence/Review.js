@@ -39,9 +39,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Review() {
+export default function Review(props) {
   const classes = useStyles();
-
+  console.log(props.category);
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>

@@ -15,16 +15,18 @@ import { makeStyles } from "@material-ui/core/styles";
 
 // import userService from "../../services/UserService";
 import CustomBackdrop from "../backdrop/CustomBackdrop";
-// import { useSelector, useDispatch } from "react-redux";
+import userService from "../../services/UserService";
+import SnackBar from "../snackBar/SnackBar";
+import { useSelector, useDispatch } from "react-redux";
 // import CheckLogIn from "../../auth/CheckLogIn";
-// import { trueLogin } from "../../Redux/actions/LoginAction";
+import { trueLogin } from "../../Redux/actions/LoginAction";
 // import SnackBar from "../snackBar/SnackBar";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://www.instagram.com/arqamshakeel/">
+      <Link color="inherit" href="">
         Fiverr Tucia
       </Link>{" "}
       {new Date().getFullYear()}
@@ -67,9 +69,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SignInSide = (props) => {
-  // const isLoggedInRedux = useSelector((state) => state.login.isloggedin);
-  // console.log("redux is loggedin: " + isLoggedInRedux);
-  // const dispatch = useDispatch();
+  const isLoggedInRedux = useSelector((state) => state.login.isloggedin);
+  console.log("redux is loggedin: " + isLoggedInRedux);
+  const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [msg, setmsg] = React.useState("");
   const [loginProgress, setLoginProgress] = React.useState(false);
@@ -81,28 +83,28 @@ const SignInSide = (props) => {
   //   ? console.log("Yes logged in")
   //   : console.log("Not logged in");
 
-  // const handleLogin = () => {
-  //   setLoginProgress(true);
-  //   userService
-  //     .UserLogin({ email: email.toLowerCase(), password: password })
-  //     .then(function (res) {
-  //       props.history.push("/");
-  //       setLoginProgress(false);
-  //       // console.log(res);
-  //       // console.log("hello");
-  //     })
-  //     .then(() => {
-  //       // userService.isLoggedin()
-  //       //   ? dispatch(trueLogin())
-  //       //   : console.log("Not logged in");
-  //     })
-  //     .catch(function (error) {
-  //       // setLoginProgress(false);
-  //       // console.log(error);
-  //       // setOpen(true);
-  //       // setmsg(error);
-  //     });
-  // };
+  const handleLogin = () => {
+    setLoginProgress(true);
+    userService
+      .UserLogin({ email: email.toLowerCase(), password: password })
+      .then(function (res) {
+        props.history.push("/");
+        setLoginProgress(false);
+        // console.log(res);
+        // console.log("hello");
+      })
+      .then(() => {
+        userService.isLoggedin()
+          ? dispatch(trueLogin())
+          : console.log("Not logged in");
+      })
+      .catch(function (error) {
+        setLoginProgress(false);
+        console.log(error);
+        setOpen(true);
+        setmsg(error);
+      });
+  };
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -132,7 +134,7 @@ const SignInSide = (props) => {
               autoComplete="email"
               autoFocus
             />
-            {/* <SnackBar open={open} setOpen={setOpen} msg={msg} /> */}
+            <SnackBar open={open} setOpen={setOpen} msg={msg} />
             <TextField
               variant="filled"
               margin="normal"
@@ -156,12 +158,12 @@ const SignInSide = (props) => {
               variant="contained"
               color="primary"
               className={classes.submit}
-              // onClick={handleLogin}
+              onClick={handleLogin}
             >
               Sign In
             </Button>
             {/* <CircularProgress color="secondary" />; */}
-            {/* <CustomBackdrop open={loginProgress} setOpen={setLoginProgress} /> */}
+            <CustomBackdrop open={loginProgress} setOpen={setLoginProgress} />
             <Grid container>
               <Grid item xs>
                 {/* <Link href="#" variant="body2">

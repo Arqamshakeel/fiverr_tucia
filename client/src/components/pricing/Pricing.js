@@ -15,6 +15,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 
+import { useSelector, useDispatch } from "react-redux";
+import { one, two, three } from "../../Redux/actions/PricingAction";
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -77,49 +80,39 @@ const useStyles = makeStyles((theme) => ({
 
 const tiers = [
   {
-    title: "Basic Editing",
-    price: "1",
-    description: [
-      "10 users included",
-      "2 GB of storage",
-      "Help center access",
-      "Email support",
-    ],
+    id: "1",
+    title: "Audio Mastering",
+    price: "30",
+    description: ["1 audio file", "24 hours", "Help center access"],
     buttonText: "Sign up for free",
     buttonVariant: "outlined",
   },
   {
-    title: "Extensive Editing",
+    id: "2",
+    title: "Basic Mix",
     subheader: "Most popular",
-    price: "3",
-    description: [
-      "20 users included",
-      "10 GB of storage",
-      "Help center access",
-      "Priority email support",
-    ],
+    price: "100",
+    description: ["Unlimited files", "1 week", "Help center access"],
     buttonText: "Get started",
     buttonVariant: "contained",
   },
   {
-    title: "Enterprise",
-    price: "5",
-    description: [
-      "50 users included",
-      "30 GB of storage",
-      "Help center access",
-      "Phone & email support",
-    ],
+    id: "3",
+    title: "Premium Mix",
+    price: "500",
+    description: ["Unlimited files", "3-4 days", "Help center access"],
     buttonText: "Contact us",
     buttonVariant: "outlined",
   },
 ];
 const footers = [
   {
+    id: "1",
     title: "Company",
     description: ["Team", "History", "Contact us", "Locations"],
   },
   {
+    id: "1",
     title: "Features",
     description: [
       "Cool stuff",
@@ -130,6 +123,7 @@ const footers = [
     ],
   },
   {
+    id: "1",
     title: "Resources",
     description: [
       "Resource",
@@ -144,9 +138,14 @@ const footers = [
   },
 ];
 
-export default function Pricing() {
+export default function Pricing(props) {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const selectedPricing = useSelector((state) => state.pricing.counter);
 
+  console.log("Prcing" + selectedPricing);
+  dispatch(one());
+  console.log("Prcing" + selectedPricing);
   return (
     <React.Fragment>
       <CssBaseline />
@@ -192,11 +191,9 @@ export default function Pricing() {
                 <CardContent>
                   <div className={classes.cardPricing}>
                     <Typography component="h2" variant="h4" color="textPrimary">
-                      {tier.price} Credit
+                      ${tier.price} USD
                     </Typography>
-                    <Typography variant="h6" color="textSecondary">
-                      /per audio
-                    </Typography>
+                    <Typography variant="h6" color="textSecondary"></Typography>
                   </div>
                   <ul>
                     {tier.description.map((line) => (
@@ -216,6 +213,18 @@ export default function Pricing() {
                     fullWidth
                     variant={tier.buttonVariant}
                     color="primary"
+                    onClick={() => {
+                      console.log(tier.id);
+                      if (tier.id === "1") {
+                        dispatch(one());
+                      } else if (tier.id === "2") {
+                        dispatch(two());
+                      } else if (tier.id === "3") {
+                        dispatch(three());
+                      }
+
+                      props.history.push("/order");
+                    }}
                   >
                     {tier.buttonText}
                   </Button>

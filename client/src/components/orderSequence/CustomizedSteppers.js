@@ -18,6 +18,10 @@ import ServicesPage from "./ServicesPage";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import AudiotrackIcon from "@material-ui/icons/Audiotrack";
 import Review from "./Review";
+import { Category, CategorySharp } from "@material-ui/icons";
+import userService from "../../services/UserService";
+import categoryService from "../../services/CategoryService";
+import { useSelector, useDispatch } from "react-redux";
 const QontoConnector = withStyles({
   alternativeLabel: {
     top: 10,
@@ -209,12 +213,115 @@ function getStepContent(step) {
 }
 
 export default function CustomizedSteppers() {
+  const selectedPricing = useSelector((state) => state.pricing.counter);
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
+  const [filesId, setFilesId] = React.useState("");
+  const [additionalText, setAdditionalText] = React.useState("");
+
+  const [categoryVar, setCategoryVar] = React.useState("");
+  const categoryHandler = () => {
+    if (selectedPricing === 1) {
+      setCategory({
+        catergory: "Audio Mastering",
+        price: 30,
+        time: "24",
+      });
+    } else if (selectedPricing === 2) {
+      setCategory({
+        catergory: "Basic Audio Mixing",
+        price: 100,
+        time: "1 week",
+      });
+    } else if (selectedPricing === 3) {
+      setCategory({
+        catergory: "Premium Audio Mixing",
+        price: 500,
+        time: "3-4 days",
+      });
+    }
+    // if (selectedPricing === 1) {
+    //   setCategoryVar("Audio Mastering");
+    // } else if (selectedPricing === 2) {
+    //   setCategoryVar("Audio Mastering");
+    // } else if (selectedPricing === 3) {
+    //   setCategoryVar("Audio Mastering");
+    // } else {
+    // }
+  };
+  const [category, setCategory] = React.useState({
+    catergory: null,
+    price: null,
+    time: null,
+  });
+
+  React.useEffect(categoryHandler, []);
+
+  // const [category, setCategory] = React.useState({
+  //   catergory: () => {
+  //     let test = "";
+  //     if (selectedPricing === 1) {
+  //       test = "Audio Mastering";
+  //     } else if (selectedPricing === 2) {
+  //       test = "Basic Mix";
+  //     } else if (selectedPricing === 3) {
+  //       test = "Premium Mix";
+  //     } else {
+  //       test = "none";
+  //     }
+
+  //     return "1";
+  //   },
+  //   price: () => {
+  //     let test = "";
+  //     if (selectedPricing === 1) {
+  //       test = "30";
+  //     } else if (selectedPricing === 2) {
+  //       test = "100";
+  //     } else if (selectedPricing === 3) {
+  //       test = "500";
+  //     } else {
+  //       test = "none";
+  //     }
+
+  //     return test;
+  //   },
+  //   time: () => {
+  //     let test = "";
+  //     if (selectedPricing === 1) {
+  //       test = "24";
+  //     } else if (selectedPricing === 2) {
+  //       test = "1 week";
+  //     } else if (selectedPricing === 3) {
+  //       test = "3-4 days";
+  //     } else {
+  //       test = "none";
+  //     }
+
+  //     return test;
+  //   },
+  // });
+
+  const [loaded, setLoaded] = React.useState(0);
+
+  const uploadFinalOrder = () => {
+    categoryService
+      .PostFinalOrder(userService.getloggedinuser()._id, filesId, {
+        category: category,
+        additionalText: additionalText,
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {});
+  };
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (activeStep == 2) {
+      uploadFinalOrder();
+    }
   };
 
   const handleBack = () => {
@@ -268,9 +375,38 @@ export default function CustomizedSteppers() {
           </div>
         ) : (
           <div>
-            {activeStep === 0 ? <Upload /> : <></>}
-            {activeStep === 1 ? <ServicesPage /> : <></>}
-            {activeStep === 2 ? <Review /> : <></>}
+            {activeStep === 0 ? (
+              <Upload
+                loaded={loaded}
+                setLoaded={setLoaded}
+                filesId={filesId}
+                setFilesId={setFilesId}
+              />
+            ) : (
+              <></>
+            )}
+            {activeStep === 1 ? (
+              <ServicesPage
+                additionalText={additionalText}
+                setAdditionalText={setAdditionalText}
+                category={category}
+                setCategory={setCategory}
+                filesId={filesId}
+                setFilesId={setFilesId}
+              />
+            ) : (
+              <></>
+            )}
+            {activeStep === 2 ? (
+              <Review
+                category={category}
+                setCategory={setCategory}
+                filesId={filesId}
+                setFilesId={setFilesId}
+              />
+            ) : (
+              <></>
+            )}
             <Typography className={classes.instructions}>
               {getStepContent(activeStep)}
             </Typography>
@@ -283,11 +419,13 @@ export default function CustomizedSteppers() {
               >
                 Back
               </Button>
+
               <Button
                 variant="contained"
                 color="primary"
                 onClick={handleNext}
                 className={classes.button}
+                disabled={loaded === 100 ? false : true}
               >
                 {activeStep === steps.length - 1 ? "Finish" : "Next"}
               </Button>

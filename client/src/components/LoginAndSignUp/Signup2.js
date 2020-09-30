@@ -15,6 +15,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 // import userService from "../../services/UserService";
 import CustomBackdrop from "../backdrop/CustomBackdrop";
+import userService from "../../services/UserService";
+import SnackBar from "../snackBar/SnackBar";
 // import { useSelector, useDispatch } from "react-redux";
 // import CheckLogIn from "../../auth/CheckLogIn";
 // import { trueLogin } from "../../Redux/actions/LoginAction";
@@ -75,35 +77,30 @@ const Signup2 = (props) => {
   const [loginProgress, setLoginProgress] = React.useState(false);
 
   const classes = useStyles();
+  const [fname, setFname] = React.useState("");
+  const [lname, setLname] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  // userService.isLoggedin()
-  //   ? console.log("Yes logged in")
-  //   : console.log("Not logged in");
-
-  // const handleLogin = () => {
-  //   setLoginProgress(true);
-  //   userService
-  //     .UserLogin({ email: email.toLowerCase(), password: password })
-  //     .then(function (res) {
-  //       props.history.push("/");
-  //       setLoginProgress(false);
-  //       // console.log(res);
-  //       // console.log("hello");
-  //     })
-  //     .then(() => {
-  //       // userService.isLoggedin()
-  //       //   ? dispatch(trueLogin())
-  //       //   : console.log("Not logged in");
-  //     })
-  //     .catch(function (error) {
-  //       // setLoginProgress(false);
-  //       // console.log(error);
-  //       // setOpen(true);
-  //       // setmsg(error);
-  //     });
-  // };
-
+  const handleLogin = () => {
+    setLoginProgress(true);
+    userService
+      .UserReg({
+        email: email,
+        password: password,
+        fname: fname,
+        lname: lname,
+      })
+      .then(function (res) {
+        setLoginProgress(false);
+        props.history.push("/signin");
+        // console.log(res);
+      })
+      .catch(function (error) {
+        setLoginProgress(false);
+        setOpen(true);
+        setmsg(error.response.data);
+      });
+  };
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -119,9 +116,9 @@ const Signup2 = (props) => {
           </Typography>
           <form className={classes.form}>
             <TextField
-              value={email}
+              value={fname}
               onChange={(e) => {
-                setEmail(e.target.value);
+                setFname(e.target.value);
               }}
               variant="filled"
               margin="normal"
@@ -129,13 +126,13 @@ const Signup2 = (props) => {
               fullWidth
               label="First name"
               name="email"
-              autoComplete="email"
+              autoComplete="name"
               autoFocus
             />
             <TextField
-              value={email}
+              value={lname}
               onChange={(e) => {
-                setEmail(e.target.value);
+                setLname(e.target.value);
               }}
               variant="filled"
               margin="normal"
@@ -143,7 +140,7 @@ const Signup2 = (props) => {
               fullWidth
               label="Last name"
               name="email"
-              autoComplete="email"
+              autoComplete="lname"
               autoFocus
             />
             <TextField
@@ -160,7 +157,7 @@ const Signup2 = (props) => {
               autoComplete="email"
               autoFocus
             />
-            {/* <SnackBar open={open} setOpen={setOpen} msg={msg} /> */}
+            <SnackBar open={open} setOpen={setOpen} msg={msg} />
             <TextField
               variant="filled"
               margin="normal"
@@ -184,12 +181,12 @@ const Signup2 = (props) => {
               variant="contained"
               color="primary"
               className={classes.submit}
-              // onClick={handleLogin}
+              onClick={handleLogin}
             >
               Sign up
             </Button>
             {/* <CircularProgress color="secondary" />; */}
-            {/* <CustomBackdrop open={loginProgress} setOpen={setLoginProgress} /> */}
+            <CustomBackdrop open={loginProgress} setOpen={setLoginProgress} />
             <Grid container>
               <Grid item xs>
                 {/* <Link href="#" variant="body2">

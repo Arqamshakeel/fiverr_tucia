@@ -18,7 +18,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Services({ clicked, setClicked }) {
+export default function Services(props) {
   const classes = useStyles();
 
   //   React.useEffect(() => {}, [clicked]);
@@ -27,17 +27,22 @@ export default function Services({ clicked, setClicked }) {
       <CardActionArea
         onClick={() => {
           console.log("card clicked");
-          setClicked(true);
+          props.setClicked(true);
+          // props.setCategory({
+          //   title: props.title,
+          //   price: props.price,
+          //   time: props.time,
+          // });
         }}
       >
         <CardMedia
           className={classes.media}
-          image="https://source.unsplash.com/random"
+          image={props.image}
           title="Contemplative Reptile"
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
-            Portrait/Beauty Retouching
+            {props.title}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
             A common choice for portrait/fashion/beauty/boudoir photographers.

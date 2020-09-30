@@ -10,8 +10,8 @@ import CustomHeader from "./components/header/CustomHeader";
 function App() {
   return (
     <BrowserRouter>
-      <ResponsiveDrawer />
-      {/* <CustomHeader /> */}
+      {/* <ResponsiveDrawer /> */}
+      <CustomHeader />
       {/* <Header /> */}
       {/* <Blog /> */}
     </BrowserRouter>
