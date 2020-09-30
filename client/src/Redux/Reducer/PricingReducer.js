@@ -1,5 +1,5 @@
 const initialState = {
-  counter: 1,
+  counter: 3,
   isLogged: true,
 };
 

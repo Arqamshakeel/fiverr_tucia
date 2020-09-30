@@ -37,11 +37,20 @@ LinearProgressWithLabel.propTypes = {
 
 const Upload = (props) => {
   const [selectedFile, setSelectedFile] = React.useState(null);
+  const [arrayOfFiles, setArrayOfFiles] = React.useState([]);
+  const [selectedFileName, setSelectedFileName] = React.useState("");
+  const [reload, setReload] = React.useState(false);
+
   // const [loaded, setLoaded] = React.useState(0);
 
   const onChangeHandler = (event) => {
-    console.log(event.target.files[0]);
-    setSelectedFile(event.target.files);
+    // console.log(event.target.files[0]);
+    // setSelectedFileName(event.target.files[0].name);
+    let fileArray = Array.from(event);
+    setArrayOfFiles(fileArray);
+    setSelectedFile(fileArray);
+    console.log(event);
+    // console.log(selectedFile);
     // console.log(selectedFile);
   };
   const onClickHandler = () => {
@@ -90,7 +99,10 @@ const Upload = (props) => {
                 type="file"
                 name="file"
                 multiple
-                onChange={onChangeHandler}
+                onChange={(e) => {
+                  onChangeHandler(e.target.files);
+                  // setFilesname(e);
+                }}
               />
             )}
             <Button
@@ -102,6 +114,44 @@ const Upload = (props) => {
             >
               Upload
             </Button>
+            <div>
+              {arrayOfFiles.map((item, index) => {
+                return (
+                  <div key={index}>
+                    {item ? item.name : null}{" "}
+                    <Button
+                      color="secondary"
+                      onClick={() => {
+                        console.log(index);
+                        // // let index2 = arrayOfFiles.indexOf(item);
+                        // // let temp = arrayOfFiles;
+                        // // temp.splice(index, 0);
+                        // // console.log(temp);
+                        let temp = arrayOfFiles;
+                        // console.log(temp);
+                        // setReload(false);
+                        // setReload(false);
+                        for (let index = 0; index < temp.length; index++) {
+                          if (temp[index].name === item.name) {
+                            console.log("matched 1: " + item.name);
+                            temp.splice(index, 1);
+                            console.log(temp);
+                            setArrayOfFiles(temp);
+                            // setReload(true);
+                            onChangeHandler(temp);
+                          }
+                        }
+
+                        // console.log(temp);
+                        // // setArrayOfFiles(arrayOfFiles.splice(item, 0));
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
 
             <div>
               <Progress max="100" color="success" value={props.loaded}>
