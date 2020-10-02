@@ -11,6 +11,7 @@ import {
   Box,
   Grow,
   Typography,
+  Chip,
 } from "@material-ui/core";
 import userService from "../../services/UserService";
 function LinearProgressWithLabel(props) {
@@ -40,6 +41,7 @@ const Upload = (props) => {
   const [arrayOfFiles, setArrayOfFiles] = React.useState([]);
   const [selectedFileName, setSelectedFileName] = React.useState("");
   const [reload, setReload] = React.useState(false);
+  const [filesID, setFilesID] = React.useState(null);
 
   // const [loaded, setLoaded] = React.useState(0);
 
@@ -59,7 +61,11 @@ const Upload = (props) => {
       data.append("file", selectedFile[x]);
     }
     Axios.post(
-      "http://localhost:4000/upload/" + userService.getloggedinuser()._id,
+      "http://localhost:4000/upload/" +
+        userService.getloggedinuser()._id +
+        "/" +
+        filesID,
+
       data,
       {
         // receive two    parameter endpoint url ,form data
@@ -70,6 +76,7 @@ const Upload = (props) => {
     ).then((res) => {
       console.log("Response Files id: " + res.data);
       props.setFilesId(res.data);
+      setFilesID(res.data);
     });
   };
 
@@ -101,7 +108,7 @@ const Upload = (props) => {
                 multiple
                 onChange={(e) => {
                   onChangeHandler(e.target.files);
-                  // setFilesname(e);
+                  props.setLoaded(0);
                 }}
               />
             )}
@@ -114,44 +121,36 @@ const Upload = (props) => {
             >
               Upload
             </Button>
-            <div>
-              {arrayOfFiles.map((item, index) => {
-                return (
-                  <div key={index}>
-                    {item ? item.name : null}{" "}
-                    <Button
-                      color="secondary"
-                      onClick={() => {
-                        console.log(index);
-                        // // let index2 = arrayOfFiles.indexOf(item);
-                        // // let temp = arrayOfFiles;
-                        // // temp.splice(index, 0);
-                        // // console.log(temp);
-                        let temp = arrayOfFiles;
-                        // console.log(temp);
-                        // setReload(false);
-                        // setReload(false);
-                        for (let index = 0; index < temp.length; index++) {
-                          if (temp[index].name === item.name) {
-                            console.log("matched 1: " + item.name);
-                            temp.splice(index, 1);
-                            console.log(temp);
-                            setArrayOfFiles(temp);
-                            // setReload(true);
-                            onChangeHandler(temp);
-                          }
-                        }
-
-                        // console.log(temp);
-                        // // setArrayOfFiles(arrayOfFiles.splice(item, 0));
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                );
-              })}
-            </div>
+            <Grid container>
+              <Grid item xs={12}>
+                <div>
+                  {arrayOfFiles.map((item, index) => {
+                    return (
+                      <div key={index} style={{ marginBottom: "5px" }}>
+                        <Chip
+                          color="primary"
+                          variant="outlined"
+                          label={item.name}
+                          onDelete={() => {
+                            let temp = arrayOfFiles;
+                            for (let index = 0; index < temp.length; index++) {
+                              if (temp[index].name === item.name) {
+                                console.log("matched 1: " + item.name);
+                                temp.splice(index, 1);
+                                console.log(temp);
+                                setArrayOfFiles(temp);
+                                onChangeHandler(temp);
+                              }
+                            }
+                          }}
+                          variant="outlined"
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </Grid>
+            </Grid>
 
             <div>
               <Progress max="100" color="success" value={props.loaded}>
@@ -161,15 +160,6 @@ const Upload = (props) => {
             <LinearProgressWithLabel value={props.loaded} />
           </div>
         </Grid>
-        {/* <Grid item xs={12}>
-          <Box display="flex" justifyContent="center" alignItems="center">
-            <img
-              width="80%"
-              src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Aspect_ratio_16_9_example.jpg"
-              alt=""
-            />
-          </Box>
-        </Grid> */}
       </Grid>
     </Grow>
   );

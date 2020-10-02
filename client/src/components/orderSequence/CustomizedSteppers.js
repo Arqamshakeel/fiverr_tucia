@@ -217,7 +217,7 @@ export default function CustomizedSteppers() {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
-  const [filesId, setFilesId] = React.useState("");
+  const [filesId, setFilesId] = React.useState("not");
   const [additionalText, setAdditionalText] = React.useState("");
 
   const [categoryVar, setCategoryVar] = React.useState("");

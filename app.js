@@ -116,11 +116,20 @@ const storage = new GridFsStorage({
 });
 const upload = multer({ storage });
 //upload.single("file")
-app.post("/upload/:id", upload.array("file"), async (req, res) => {
+app.post("/upload/:id/:file_id", upload.array("file"), async (req, res) => {
   // console.log(req);
   // res.json({ file: req.file });
-  let order = new Order();
 
+  // let files_id = "";
+  let files_id = req.params.file_id;
+  console.log("Files_id:" + files_id);
+  let order = null;
+  if (files_id === "null") {
+    order = new Order();
+  } else {
+    order = await Order.findById(files_id);
+  }
+  // order = new Order();
   for (let i = 0; i < req.files.length; i++) {
     order.uploads_Id.push(req.files[i].filename);
   }
