@@ -72,7 +72,7 @@ const production = "mongodb://localhost:27017/";
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/client/build/index.html"));
 });
-const mongoURI = development + "trakouts";
+const mongoURI = production + "trakouts";
 
 // mongoose
 //   .connect("mongodb://localhost/mongouploads2", {
@@ -378,7 +378,7 @@ app.use(function (err, req, res, next) {
 });
 
 mongoose
-  .connect(development + "trakouts", {
+  .connect(production + "trakouts", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
