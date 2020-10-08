@@ -2,6 +2,8 @@ var express = require("express");
 var router = express.Router();
 // const mongoose = require("mongoose");
 var { FinalOrder } = require("../mongooseModels/model.finalorders");
+var socketApi = require("../socketApi");
+var io = socketApi.io;
 const path = require("path");
 const crypto = require("crypto");
 const mongoose = require("mongoose");
@@ -14,6 +16,10 @@ router.post("/finalorder/:c_id/:files_id", async (req, res) => {
   // service_Category: {},
   // total_price: "",
   // time: "",
+  console.log("====================================");
+  console.log(req.body.time);
+  console.log(req.body.date);
+  console.log("====================================");
   let c_id = req.params.c_id;
   let o_id = req.params.files_id;
 
@@ -22,11 +28,16 @@ router.post("/finalorder/:c_id/:files_id", async (req, res) => {
   finalOrder.F_Id = o_id;
   finalOrder.service_Category = req.body.category;
   finalOrder.comments = req.body.additionalText;
-
-  // console.log(req.body.additionalText);
-  // console.log("c+id: " + c_id + " o_id: " + o_id);
+  finalOrder.orderCreatedTime = req.body.time;
+  finalOrder.orderCreatedDate = req.body.date;
   await finalOrder.save();
   return res.send();
 });
-
+io.on("connection", (socket) => {
+  socket.on("message", (data) => {
+    console.log(data);
+    socket.broadcast.emit("client", data);
+    return;
+  });
+});
 module.exports = router;

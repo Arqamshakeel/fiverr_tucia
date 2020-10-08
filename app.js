@@ -20,7 +20,9 @@ const corsOptions = {
   credentials: true,
   methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
   //origin: "http://ec2-18-224-94-239.us-east-2.compute.amazonaws.com",
-  origin: "http://localhost:3000",
+  origin: "http://ec2-3-135-218-85.us-east-2.compute.amazonaws.com",
+  // origin: "http://localhost:3000",
+  // origin: "https://www.trakouts.com",
   preflightContinue: false,
 };
 
@@ -55,18 +57,22 @@ app.use("/order", finalOrderRouter);
 
 app.use(express.static(path.join(__dirname, "client/build")));
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header(
+    "Access-Control-Allow-Origin",
+    "http://ec2-3-135-218-85.us-east-2.compute.amazonaws.com"
+  );
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
   next();
 });
-
+const development = "mongodb://localhost/";
+const production = "mongodb://localhost:27017/";
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/client/build/index.html"));
 });
-const mongoURI = "mongodb://localhost/mongouploads";
+const mongoURI = development + "trakouts";
 
 // mongoose
 //   .connect("mongodb://localhost/mongouploads2", {
@@ -141,6 +147,59 @@ app.post("/upload/:id/:file_id", upload.array("file"), async (req, res) => {
   console.log(req.files);
   return res.send(order._id);
 });
+function formatAMPM(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? "pm" : "am";
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  var strTime = hours + ":" + minutes + " " + ampm;
+  return strTime;
+}
+
+//for admin, when the order is completed and the edited files aree sent.
+app.post(
+  "/upload/admin/:id/:file_id/:status",
+  upload.array("file"),
+  async (req, res) => {
+    let files_id = req.params.file_id;
+    console.log("Files_id:" + files_id);
+    let order = null;
+    if (files_id === "null") {
+      order = new Order();
+    } else {
+      order = await Order.findById(files_id);
+    }
+    // order = new Order();
+    for (let i = 0; i < req.files.length; i++) {
+      order.uploads_Id.push(req.files[i].filename);
+    }
+    // order.customer_Id = req.params.id;
+
+    await order.save();
+
+    let finalorder = await FinalOrder.findById(req.params.id);
+    if (!finalorder) return res.status(400).send("FinalOrder Model not found!");
+
+    finalorder.completed_fileID = order._id;
+    finalorder.status = req.params.status;
+    finalorder.orderCompletedTime = formatAMPM(new Date());
+    finalorder.orderCompletedDate =
+      new Date().getDate() +
+      "/" +
+      (new Date().getMonth() + 1) +
+      "/" +
+      new Date().getFullYear();
+
+    await finalorder.save();
+
+    console.log("Customer ID: " + req.params.id);
+    console.log("hello i  up");
+    console.log(req.files);
+    return res.send(order._id);
+  }
+);
 app.get("/allorder/finalorder", async (req, res) => {
   let allorders = await FinalOrder.find();
   console.log("hello g allorder");
@@ -157,6 +216,31 @@ app.get("/allfiles/:id", async (req, res) => {
   console.log("hello g allorder");
   return res.send(order);
 });
+
+//this is for getting user files when user slides the order.
+app.get("/allorder/user/:id", async (req, res) => {
+  console.log("In");
+  let userID = req.params.id;
+
+  let order = await FinalOrder.find({ C_Id: req.params.id });
+  if (!order)
+    return res
+      .status(400)
+      .send("Files not found against user Order " + req.params.id);
+
+  // console.log(order[0].completed_fileID);
+
+  // let files = await Order.findById(order[0].completed_fileID);
+  // if (!files)
+  //   return res
+  //     .status(400)
+  //     .send("Files not found against user Files " + req.params.id);
+  // console.log(files);
+
+  return res.send(order);
+});
+
+// this sends the downloadable links to the client
 app.get("/allfilesDownload/:id", async (req, res) => {
   let filesId = req.params.id;
   let order = await Order.findById(filesId);
@@ -294,7 +378,7 @@ app.use(function (err, req, res, next) {
 });
 
 mongoose
-  .connect("mongodb://localhost/mongouploads", {
+  .connect(development + "trakouts", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

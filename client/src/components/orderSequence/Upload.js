@@ -4,6 +4,8 @@ import Axios from "axios";
 import { Progress } from "reactstrap";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { useSelector, useDispatch } from "react-redux";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import FileCopyIcon from "@material-ui/icons/FileCopy";
 import {
   Grid,
   FormControl,
@@ -14,6 +16,7 @@ import {
   Chip,
 } from "@material-ui/core";
 import userService from "../../services/UserService";
+import { baseURL } from "../../services/URL";
 function LinearProgressWithLabel(props) {
   return (
     <Box display="flex" alignItems="center">
@@ -61,7 +64,8 @@ const Upload = (props) => {
       data.append("file", selectedFile[x]);
     }
     Axios.post(
-      "http://localhost:4000/upload/" +
+      baseURL() +
+        "/upload/" +
         userService.getloggedinuser()._id +
         "/" +
         filesID,
@@ -97,33 +101,82 @@ const Upload = (props) => {
     >
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <div>you have selected {selectedPricing} Pricing</div>
+          <Typography>
+            you have selected{" "}
+            {selectedPricing === 1
+              ? "Audio Mastering Package ($30 USD). You can select only 1 file."
+              : null}{" "}
+            {selectedPricing === 2
+              ? "Basic Mix Package ($100 USD). You can select multiple files."
+              : null}{" "}
+            {selectedPricing === 3
+              ? "Premium Mix Package ($500 USD). You can select multiple files."
+              : null}{" "}
+          </Typography>
           <div>
             {selectedPricing === 1 ? (
-              <input type="file" name="file" onChange={onChangeHandler} />
+              <FormControl>
+                <Button
+                  style={{ marginTop: "10px" }}
+                  variant="contained"
+                  component="label"
+                  startIcon={<FileCopyIcon />}
+                  //   className={classes.TextFieldMarginTop}
+                >
+                  Select Audio Files
+                  <input
+                    type="file"
+                    name="file"
+                    style={{ display: "none" }}
+                    accept="audio/*"
+                    onInputCapture={(e) => {
+                      onChangeHandler(e.target.files);
+                      console.log("On Change, " + e.target.files);
+                      props.setLoaded(0);
+                    }}
+                    // onChange={(e) => {
+                    //   onChangeHandler(e.target.files);
+                    //   console.log("On Change, " + e.target.files);
+                    //   props.setLoaded(0);
+                    // }}
+                  />
+                </Button>
+              </FormControl>
             ) : (
-              <input
-                type="file"
-                name="file"
-                multiple
-                onChange={(e) => {
-                  onChangeHandler(e.target.files);
-                  props.setLoaded(0);
-                }}
-              />
+              <FormControl>
+                <Button
+                  style={{ marginTop: "10px" }}
+                  variant="contained"
+                  component="label"
+                  startIcon={<FileCopyIcon />}
+                  //   className={classes.TextFieldMarginTop}
+                >
+                  Select Audio Files
+                  <input
+                    type="file"
+                    name="file"
+                    style={{ display: "none" }}
+                    multiple
+                    accept="audio/*"
+                    // accept=""
+                    onInputCapture={(e) => {
+                      onChangeHandler(e.target.files);
+                      console.log("On Change, " + e.target.files);
+                      props.setLoaded(0);
+                    }}
+                    // onChange={(e) => {
+                    //   onChangeHandler(e.target.files);
+                    //   console.log("On Change, " + e.target.files);
+                    //   props.setLoaded(0);
+                    // }}
+                  />
+                </Button>
+              </FormControl>
             )}
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={onClickHandler}
-              style={{ float: "right" }}
-              disabled={selectedFile ? false : true}
-            >
-              Upload
-            </Button>
+
             <Grid container>
               <Grid item xs={12}>
-                <div>
+                <div style={{ marginTop: "10px" }}>
                   {arrayOfFiles.map((item, index) => {
                     return (
                       <div key={index} style={{ marginBottom: "5px" }}>
@@ -133,6 +186,7 @@ const Upload = (props) => {
                           label={item.name}
                           onDelete={() => {
                             let temp = arrayOfFiles;
+                            // setReload(true);
                             for (let index = 0; index < temp.length; index++) {
                               if (temp[index].name === item.name) {
                                 console.log("matched 1: " + item.name);
@@ -152,13 +206,23 @@ const Upload = (props) => {
               </Grid>
             </Grid>
 
-            <div>
-              <Progress max="100" color="success" value={props.loaded}>
-                {Math.round(props.loaded, 2)}%
-              </Progress>
-            </div>
-            <LinearProgressWithLabel value={props.loaded} />
+            <Grid item xs={12}>
+              <LinearProgressWithLabel value={props.loaded} />
+            </Grid>
           </div>
+          <Grid item xs={12}>
+            {" "}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={onClickHandler}
+              style={{ float: "right", marginTop: "10px" }}
+              startIcon={<CloudUploadIcon />}
+              disabled={arrayOfFiles.length > 0 ? false : true}
+            >
+              Upload
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </Grow>

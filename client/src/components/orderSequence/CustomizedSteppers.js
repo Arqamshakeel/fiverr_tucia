@@ -22,6 +22,12 @@ import { Category, CategorySharp } from "@material-ui/icons";
 import userService from "../../services/UserService";
 import categoryService from "../../services/CategoryService";
 import { useSelector, useDispatch } from "react-redux";
+import io from "socket.io-client";
+import Paypal from "../paypal/PayPal";
+import { Box, Grid } from "@material-ui/core";
+import CheckLogIn from "../../auth/CheckLogIn";
+import { baseURL } from "../../services/URL";
+const socket = io.connect(baseURL());
 const QontoConnector = withStyles({
   alternativeLabel: {
     top: 10,
@@ -304,15 +310,31 @@ export default function CustomizedSteppers() {
   // });
 
   const [loaded, setLoaded] = React.useState(0);
-
+  function formatAMPM(date) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? "pm" : "am";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    var strTime = hours + ":" + minutes + " " + ampm;
+    return strTime;
+  }
   const uploadFinalOrder = () => {
     categoryService
       .PostFinalOrder(userService.getloggedinuser()._id, filesId, {
         category: category,
         additionalText: additionalText,
+        time: formatAMPM(new Date()),
+        date:
+          new Date().getDate() +
+          "/" +
+          (new Date().getMonth() + 1) +
+          "/" +
+          new Date().getFullYear(),
       })
       .then((data) => {
-        console.log(data);
+        socket.emit("message", { filesId });
       })
       .catch((error) => {});
   };
@@ -320,10 +342,11 @@ export default function CustomizedSteppers() {
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     if (activeStep == 2) {
-      uploadFinalOrder();
     }
   };
-
+  React.useEffect(() => {
+    socket.on("client", (data) => {}, []);
+  });
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -333,15 +356,17 @@ export default function CustomizedSteppers() {
   };
 
   return (
-    <div className={classes.root}>
-      {/* <Stepper alternativeLabel activeStep={activeStep}>
+    <div>
+      <CheckLogIn>
+        <div className={classes.root}>
+          {/* <Stepper alternativeLabel activeStep={activeStep}>
         {steps.map((label) => (
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
           </Step>
         ))}
       </Stepper> */}
-      {/* <Stepper
+          {/* <Stepper
         alternativeLabel
         activeStep={activeStep}
         connector={<QontoConnector />}
@@ -352,87 +377,106 @@ export default function CustomizedSteppers() {
           </Step>
         ))}
       </Stepper> */}
-      <Stepper
-        alternativeLabel
-        activeStep={activeStep}
-        connector={<ColorlibConnector />}
-      >
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      <div>
-        {activeStep === steps.length ? (
+          <Stepper
+            alternativeLabel
+            activeStep={activeStep}
+            connector={<ColorlibConnector />}
+          >
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel StepIconComponent={ColorlibStepIcon}>
+                  {label}
+                </StepLabel>
+              </Step>
+            ))}
+          </Stepper>
           <div>
-            <Typography className={classes.instructions}>
-              All steps completed - you&apos;re finished
-            </Typography>
-            <Button onClick={handleReset} className={classes.button}>
-              Reset
-            </Button>
-          </div>
-        ) : (
-          <div>
-            {activeStep === 0 ? (
-              <Upload
-                loaded={loaded}
-                setLoaded={setLoaded}
-                filesId={filesId}
-                setFilesId={setFilesId}
-              />
+            {activeStep === steps.length ? (
+              <div>
+                <Typography className={classes.instructions}>
+                  All steps completed - you just have to pay now!
+                </Typography>
+                {/* <Button onClick={handleReset} className={classes.button}>
+              
+            </Button> */}
+                <Grid container>
+                  <Grid item xs={12}>
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Paypal
+                        selectedPricing={category}
+                        uploadFinalOrder={uploadFinalOrder}
+                      />
+                    </Box>
+                  </Grid>
+                </Grid>
+              </div>
             ) : (
-              <></>
-            )}
-            {activeStep === 1 ? (
-              <ServicesPage
-                additionalText={additionalText}
-                setAdditionalText={setAdditionalText}
-                category={category}
-                setCategory={setCategory}
-                filesId={filesId}
-                setFilesId={setFilesId}
-              />
-            ) : (
-              <></>
-            )}
-            {activeStep === 2 ? (
-              <Review
-                category={category}
-                setCategory={setCategory}
-                filesId={filesId}
-                setFilesId={setFilesId}
-              />
-            ) : (
-              <></>
-            )}
-            <Typography className={classes.instructions}>
-              {getStepContent(activeStep)}
-            </Typography>
+              <div>
+                {activeStep === 0 ? (
+                  <Upload
+                    loaded={loaded}
+                    setLoaded={setLoaded}
+                    filesId={filesId}
+                    setFilesId={setFilesId}
+                  />
+                ) : (
+                  <></>
+                )}
+                {activeStep === 1 ? (
+                  <ServicesPage
+                    additionalText={additionalText}
+                    setAdditionalText={setAdditionalText}
+                    category={category}
+                    setCategory={setCategory}
+                    filesId={filesId}
+                    setFilesId={setFilesId}
+                  />
+                ) : (
+                  <></>
+                )}
+                {activeStep === 2 ? (
+                  <Review
+                    category={category}
+                    setCategory={setCategory}
+                    filesId={filesId}
+                    setFilesId={setFilesId}
+                  />
+                ) : (
+                  <></>
+                )}
+                <Typography className={classes.instructions}>
+                  {getStepContent(activeStep)}
+                </Typography>
 
-            <div style={{ float: "right", marginBottom: "50px" }}>
-              <Button
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                className={classes.button}
-              >
-                Back
-              </Button>
+                <div style={{ float: "right", marginBottom: "50px" }}>
+                  <Button
+                    disabled={activeStep === 0}
+                    onClick={handleBack}
+                    className={classes.button}
+                  >
+                    Back
+                  </Button>
 
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleNext}
-                className={classes.button}
-                disabled={loaded === 100 ? false : true}
-              >
-                {activeStep === steps.length - 1 ? "Finish" : "Next"}
-              </Button>
-            </div>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNext}
+                    className={classes.button}
+                    disabled={loaded === 100 ? false : true}
+                  >
+                    {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                  </Button>
+                </div>
+                {/* {activeStep === 2 ? <Paypal /> : null} */}
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      </CheckLogIn>
     </div>
   );
 }

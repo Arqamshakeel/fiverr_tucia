@@ -41,7 +41,7 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 // import productService from "../../services/ProductServices";
 import { withRouter } from "react-router";
 import HomeIcon from "@material-ui/icons/Home";
-
+import Push from "push.js";
 import { useSelector, useDispatch } from "react-redux";
 //import { decrement, zero } from "../../Redux/actions/CartBadgeAction";
 // import { set } from "../../Redux/actions/CartBadgeAction";
@@ -76,11 +76,14 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import Routes from "../routes/Routes";
 import CustomList from "../DrawerList.js/CustomList";
 import userService from "../../services/UserService";
-
+import io from "socket.io-client";
+import orderServices from "../../services/OrderServices";
+import { incrementOrder, setOrder } from "../../Redux/actions/OrderBadgeAction";
+import { baseURL } from "../../services/URL";
 // import ShowWithSearch2 from "../products/ShowWithSearch2";
 // import ShowExpired from "../products/ShowExpired";
 // import CartScreen from "../cart/CartScreen";
-// const socket = io.connect("http://localhost:4001");
+const socket = io.connect(baseURL());
 // const socket = io.connect("https://familymart.gq");
 // axios.defaults.baseURL = "https://familymart.gq/api/";
 // const socket = io.connect(
@@ -229,7 +232,7 @@ function CustomHeader(props) {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   //const [cartBadge, setCartBadge] = React.useState("0");
   //   const cartBadge = useSelector((state) => state.counter.counter);
-  //   const orderBadge = useSelector((state) => state.order.order);
+  const orderBadge = useSelector((state) => state.order.order);
   const isMenuOpen = Boolean(anchorEl);
   const [searchTextField, setSearchTextField] = React.useState("");
   const [top100Films, setTop100Films] = React.useState([]);
@@ -288,17 +291,17 @@ function CustomHeader(props) {
   //         console.log(error);
   //       });
   //   }, [cartBadge, orderBadge]);
-  //   React.useEffect(() => {
-  //     productService
-  //       .getOrder()
-  //       .then(function (order) {
-  //         //console.log(cart);
-  //         // dispatch(setOrder(order.length));
-  //       })
-  //       .catch(function (error) {
-  //         console.log(error);
-  //       });
-  //   }, [cartBadge, orderBadge]);
+  React.useEffect(() => {
+    orderServices
+      .getFinalOrder()
+      .then((data) => {
+        console.log(data);
+        dispatch(setOrder(data.length));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [orderBadge]);
 
   //   React.useEffect(() => {
   //     socket.on("client", (data) => {
@@ -325,11 +328,25 @@ function CustomHeader(props) {
       dispatch(switchLogin());
     }
   }, []);
-  //   React.useEffect(() => {
-  //     productService.getProductsname().then((res) => {
-  //       setTop100Films(res);
-  //     });
-  //   }, []);
+
+  React.useEffect(() => {
+    socket.on("client", (data) => {
+      dispatch(incrementOrder());
+      if (userService.isAdmin())
+        Push.create("Trakers", {
+          body: "You got new order!",
+          requireInteraction: true,
+          onClick: function () {
+            window.focus();
+            this.close();
+          },
+        });
+      // if (userService.isAdmin()) {
+      // console.log("====================================");
+      // console.log("admin" + userService.isAdmin());
+      // console.log("====================================");
+    });
+  }, []);
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -357,7 +374,7 @@ function CustomHeader(props) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem
+      {/* <MenuItem
         onClick={() => {
           props.history.push("/cart");
           handleMobileMenuClose();
@@ -369,7 +386,7 @@ function CustomHeader(props) {
           </Badge>
         </IconButton>
         <p>Cart</p>
-      </MenuItem>
+      </MenuItem> */}
       <Divider />
       <MenuItem
         onClick={() => {
@@ -431,12 +448,12 @@ function CustomHeader(props) {
       {userService.isAdmin() ? (
         <MenuItem
           onClick={() => {
-            props.history.push("/allorders");
+            props.history.push("/admindashboard");
             handleMobileMenuClose();
           }}
         >
           <IconButton aria-label="show 11 new notifications" color="inherit">
-            <Badge badgeContent={10} color="secondary">
+            <Badge badgeContent={orderBadge} color="secondary">
               <MessageIcon />
             </Badge>
           </IconButton>
@@ -445,7 +462,7 @@ function CustomHeader(props) {
       ) : (
         <MenuItem
           onClick={() => {
-            props.history.push("/orderform2");
+            props.history.push("/pricing");
             handleMobileMenuClose();
           }}
         >
@@ -483,7 +500,7 @@ function CustomHeader(props) {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-            Family Mart
+            Trakouts
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -577,17 +594,17 @@ function CustomHeader(props) {
                 aria-label="show 4 new mails"
                 color="inherit"
                 onClick={() => {
-                  props.history.push("/allorders");
+                  props.history.push("/admindashboard");
                 }}
               >
-                <Badge badgeContent={10} color="secondary">
+                <Badge badgeContent={orderBadge} color="secondary">
                   <MessageIcon />
                 </Badge>
               </IconButton>
             ) : (
               <></>
             )}
-            <IconButton
+            {/* <IconButton
               aria-label="show 17 new notifications"
               color="inherit"
               onClick={() => {
@@ -597,7 +614,7 @@ function CustomHeader(props) {
               <Badge badgeContent={10} color="secondary">
                 <ShoppingCartIcon />
               </Badge>
-            </IconButton>
+            </IconButton> */}
             <IconButton
               aria-label="show 17 new notifications"
               color="inherit"
@@ -619,11 +636,11 @@ function CustomHeader(props) {
             >
               <AccountCircle />
             </IconButton> */}
-            <div>
+            {/* <div>
               {userService.getloggedinuser()
                 ? userService.getloggedinuser()._id
                 : null}
-            </div>
+            </div> */}
             {isLoggedInRedux ? (
               <Tooltip title={userService.getloggedinuser().name}>
                 <span style={{ margin: "auto", marginLeft: "10px" }}>

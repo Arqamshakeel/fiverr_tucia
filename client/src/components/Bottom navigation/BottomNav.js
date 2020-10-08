@@ -22,6 +22,8 @@ import HomeIcon from "@material-ui/icons/Home";
 import SendIcon from "@material-ui/icons/Send";
 import { Snackbar } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
+import { useSelector } from "react-redux";
+import userService from "../../services/UserService";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -36,7 +38,7 @@ const useStyles = makeStyles({
 
 const BottomNav = (props) => {
   // const cartBadge = useSelector((state) => state.counter.counter);
-  // const orderBadge = useSelector((state) => state.order.order);
+  const orderBadge = useSelector((state) => state.order.order);
   const theme = createMuiTheme({
     palette: {
       type: "light",
@@ -93,19 +95,35 @@ const BottomNav = (props) => {
             }}
           />
 
-          <BottomNavigationAction
-            label="Place Order"
-            onClick={() => {
-              //console.log("yessssss");
+          {userService.isAdmin() ? (
+            <BottomNavigationAction
+              label="Orders"
+              onClick={() => {
+                //console.log("yessssss");
 
-              props.history.push("/order");
-            }}
-            icon={
-              <Badge color="secondary">
-                <SendIcon />
-              </Badge>
-            }
-          />
+                props.history.push("/admindashboard");
+              }}
+              icon={
+                <Badge badgeContent={orderBadge} color="secondary">
+                  <MailIcon />
+                </Badge>
+              }
+            />
+          ) : (
+            <BottomNavigationAction
+              label="Place Order"
+              onClick={() => {
+                //console.log("yessssss");
+
+                props.history.push("/pricing");
+              }}
+              icon={
+                <Badge color="secondary">
+                  <SendIcon />
+                </Badge>
+              }
+            />
+          )}
         </BottomNavigation>
         <div className={classes.root}>
           <Snackbar

@@ -1,7 +1,8 @@
 import axios from "axios";
+import { baseURL } from "./URL";
 
 // axios.defaults.baseURL = "https://test-express-arqam.herokuapp.com/api/";
-axios.defaults.baseURL = "http://localhost:4000/";
+axios.defaults.baseURL = baseURL() + "/";
 // axios.defaults.baseURL = "https://familymart.gq/api/";
 // axios.defaults.baseURL = "https://familymartgrw.com/api/";
 // axios.defaults.baseURL =

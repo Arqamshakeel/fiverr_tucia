@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
   image: {
     backgroundImage:
-      "url(https://images.wallpaperscraft.com/image/moon_tree_starry_sky_132139_1920x1080.jpg)",
+      "url(https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80)",
     backgroundRepeat: "no-repeat",
     backgroundColor:
       theme.palette.type === "light"
@@ -69,9 +69,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Order2 = (props) => {
-  // const isLoggedInRedux = useSelector((state) => state.login.isloggedin);
-  // console.log("redux is loggedin: " + isLoggedInRedux);
-  // const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [msg, setmsg] = React.useState("");
   const [loginProgress, setLoginProgress] = React.useState(false);
@@ -87,12 +84,6 @@ const Order2 = (props) => {
       <Grid item xs={12} sm={9} md={9} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <CustomizedSteppers />
-          {/* <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography> */}
         </div>
       </Grid>
     </Grid>

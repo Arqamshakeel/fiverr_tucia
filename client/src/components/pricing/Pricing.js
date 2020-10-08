@@ -17,12 +17,13 @@ import Box from "@material-ui/core/Box";
 
 import { useSelector, useDispatch } from "react-redux";
 import { one, two, three } from "../../Redux/actions/PricingAction";
+import { withRouter } from "react-router-dom";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
+      <Link color="inherit" href="">
         Your Website
       </Link>{" "}
       {new Date().getFullYear()}
@@ -83,8 +84,8 @@ const tiers = [
     id: "1",
     title: "Audio Mastering",
     price: "30",
-    description: ["1 audio file", "24 hours", "Help center access"],
-    buttonText: "Sign up for free",
+    description: ["1 audio file", "24 hours"],
+    buttonText: "GET STARTED",
     buttonVariant: "outlined",
   },
   {
@@ -92,7 +93,7 @@ const tiers = [
     title: "Basic Mix",
     subheader: "Most popular",
     price: "100",
-    description: ["Unlimited files", "1 week", "Help center access"],
+    description: ["Unlimited files", "1 week"],
     buttonText: "Get started",
     buttonVariant: "contained",
   },
@@ -100,8 +101,8 @@ const tiers = [
     id: "3",
     title: "Premium Mix",
     price: "500",
-    description: ["Unlimited files", "3-4 days", "Help center access"],
-    buttonText: "Contact us",
+    description: ["Unlimited files", "3-4 days"],
+    buttonText: "GET STARTED",
     buttonVariant: "outlined",
   },
 ];
@@ -138,7 +139,7 @@ const footers = [
   },
 ];
 
-export default function Pricing(props) {
+const Pricing = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const selectedPricing = useSelector((state) => state.pricing.counter);
@@ -147,93 +148,107 @@ export default function Pricing(props) {
   dispatch(one());
   console.log("Prcing" + selectedPricing);
   return (
-    <React.Fragment>
-      <CssBaseline />
-      <Container maxWidth="sm" component="main" className={classes.heroContent}>
-        <Typography
-          component="h1"
-          variant="h2"
-          align="center"
-          color="textPrimary"
-          gutterBottom
+    <div style={{ margin: "10px" }}>
+      <React.Fragment>
+        <CssBaseline />
+        <Container
+          maxWidth="sm"
+          component="main"
+          className={classes.heroContent}
         >
-          Pricing
-        </Typography>
-        <Typography
-          variant="h5"
-          align="center"
-          color="textSecondary"
-          component="p"
-        >
-          Quickly you can select pricing.
-        </Typography>
-      </Container>
+          <Typography
+            component="h1"
+            variant="h2"
+            align="center"
+            color="textPrimary"
+            gutterBottom
+          >
+            Pricing
+          </Typography>
+          <Typography
+            variant="h5"
+            align="center"
+            color="textSecondary"
+            component="p"
+          >
+            Quickly you can select pricing and get started.
+          </Typography>
+        </Container>
 
-      <Container maxWidth="md" component="main">
-        <Grid container spacing={5} alignItems="flex-end">
-          {tiers.map((tier) => (
-            <Grid
-              item
-              key={tier.title}
-              xs={12}
-              sm={tier.title === "Enterprise" ? 12 : 6}
-              md={4}
-            >
-              <Card>
-                <CardHeader
-                  title={tier.title}
-                  subheader={tier.subheader}
-                  titleTypographyProps={{ align: "center" }}
-                  subheaderTypographyProps={{ align: "center" }}
-                  action={tier.title === "Pro" ? <StarIcon /> : null}
-                  className={classes.cardHeader}
-                />
-                <CardContent>
-                  <div className={classes.cardPricing}>
-                    <Typography component="h2" variant="h4" color="textPrimary">
-                      ${tier.price} USD
-                    </Typography>
-                    <Typography variant="h6" color="textSecondary"></Typography>
-                  </div>
-                  <ul>
-                    {tier.description.map((line) => (
+        <Container maxWidth="md" component="main">
+          <Grid container spacing={5} alignItems="flex-end">
+            {tiers.map((tier) => (
+              <Grid
+                item
+                key={tier.title}
+                xs={12}
+                sm={tier.title === "Enterprise" ? 12 : 6}
+                md={4}
+              >
+                <Card>
+                  <CardHeader
+                    title={tier.title}
+                    subheader={tier.subheader}
+                    titleTypographyProps={{ align: "center" }}
+                    subheaderTypographyProps={{ align: "center" }}
+                    action={tier.title === "Pro" ? <StarIcon /> : null}
+                    className={classes.cardHeader}
+                  />
+                  <CardContent>
+                    <div className={classes.cardPricing}>
                       <Typography
-                        component="li"
-                        variant="subtitle1"
-                        align="center"
-                        key={line}
+                        component="h2"
+                        variant="h4"
+                        color="textPrimary"
                       >
-                        {line}
+                        ${tier.price} USD
                       </Typography>
-                    ))}
-                  </ul>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    fullWidth
-                    variant={tier.buttonVariant}
-                    color="primary"
-                    onClick={() => {
-                      console.log(tier.id);
-                      if (tier.id === "1") {
-                        dispatch(one());
-                      } else if (tier.id === "2") {
-                        dispatch(two());
-                      } else if (tier.id === "3") {
-                        dispatch(three());
-                      }
+                      <Typography
+                        variant="h6"
+                        color="textSecondary"
+                      ></Typography>
+                    </div>
+                    <ul>
+                      {tier.description.map((line) => (
+                        <Typography
+                          component="li"
+                          variant="subtitle1"
+                          align="center"
+                          key={line}
+                        >
+                          {line}
+                        </Typography>
+                      ))}
+                    </ul>
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      fullWidth
+                      variant={tier.buttonVariant}
+                      color="primary"
+                      onClick={() => {
+                        console.log(tier.id);
+                        if (tier.id === "1") {
+                          dispatch(one());
+                        } else if (tier.id === "2") {
+                          dispatch(two());
+                        } else if (tier.id === "3") {
+                          dispatch(three());
+                        }
 
-                      props.history.push("/order");
-                    }}
-                  >
-                    {tier.buttonText}
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-    </React.Fragment>
+                        props.history.push("/order");
+                      }}
+                    >
+                      {tier.buttonText}
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </React.Fragment>
+    </div>
   );
-}
+};
+export default withRouter(Pricing);

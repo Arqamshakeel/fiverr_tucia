@@ -7,15 +7,18 @@ import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import { Button } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
+import userService from "../../services/UserService";
 
 const useStyles = makeStyles((theme) => ({
   mainFeaturedPost: {
     position: "relative",
     backgroundColor: theme.palette.grey[800],
     color: theme.palette.common.white,
-    marginBottom: theme.spacing(4),
+    marginBottom: theme.spacing(0),
     backgroundImage: "url(https://source.unsplash.com/random)",
     backgroundSize: "cover",
+    height: "800px",
+    width: "100%",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
   },
@@ -66,13 +69,14 @@ const MainFeaturedPost = (props) => {
             >
               Edit you audio files from us.
             </Typography>
-            <Typography variant="h5" color="inherit" paragraph>
-              Best Pricing. Amazing Editing. Amazing Pricing.
+            <Typography variant="h5" paragraph>
+              Best Pricing. Amazing Editing.
             </Typography>
-
             <Button
               onClick={() => {
-                props.history.push("/order");
+                userService.isLoggedin()
+                  ? props.history.push("/pricing")
+                  : props.history.push("/signin");
               }}
               variant="outlined"
               color="secondary"

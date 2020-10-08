@@ -45,7 +45,7 @@ class UserService extends GenericService {
   };
   isAdmin = () => {
     if (this.isLoggedin()) {
-      if (this.getloggedinuser().role == "admin") {
+      if (this.getloggedinuser().role == true) {
         return true;
       } else {
         return false;
@@ -58,6 +58,13 @@ class UserService extends GenericService {
   };
 
   UserReg = (data) => this.post("users/register", data);
+
+  getUserOrders = (id) => this.get("allorder/user/" + id);
+  getAllUsers = () => this.get("users/allusers");
+  updateUser = (data) => this.post("users/update", data);
+
+  getUserDetails = (id) => this.get("users/details/" + id);
+  updateUserDetails = (id, data) => this.post("users/details/" + id, data);
   // UserReg = (data) =>
   //   new Promise((resolve, reject) => {
   //     this.postReg("users/register", data)

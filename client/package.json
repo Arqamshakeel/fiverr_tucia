@@ -15,9 +15,10 @@
     "google-map-react": "^2.1.3",
     "jwt-decode": "^3.0.0-beta.2",
     "markdown-to-jsx": "^7.0.0",
-    "material-table": "^1.69.0",
+    "material-table": "^1.69.1",
     "moment": "^2.27.0",
     "moment-timezone": "^0.5.31",
+    "push.js": "^1.0.12",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-google-picker": "^0.1.0",
@@ -27,7 +28,8 @@
     "react-scripts": "3.4.3",
     "reactstrap": "^8.6.0",
     "redux": "^4.0.5",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "socket.io-client": "^2.3.1"
   },
   "scripts": {
     "start": "react-scripts start",

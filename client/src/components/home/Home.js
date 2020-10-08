@@ -13,6 +13,13 @@ import Axios from "axios";
 import { Progress } from "reactstrap";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Blog from "../landingPage/Blog";
+import PayPalButton from "../paypal/PayPalButton";
+import Paypal from "../paypal/PayPal";
+import MaterialTable from "../materialTable/MaterialTable";
+import Material_Table from "../materialTable/MaterialTable";
+import MainFeaturedPost from "../landingPage/MainFeaturedPost";
+import Pricing from "../pricing/Pricing";
+import { withRouter } from "react-router-dom";
 function LinearProgressWithLabel(props) {
   return (
     <Box display="flex" alignItems="center">
@@ -27,6 +34,14 @@ function LinearProgressWithLabel(props) {
     </Box>
   );
 }
+const mainFeaturedPost = {
+  title: "Title of a longer featured blog post",
+  description:
+    "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting in this post's contents.",
+  image: "https://source.unsplash.com/random",
+  imgText: "main image description",
+  linkText: "Continue reading…",
+};
 
 LinearProgressWithLabel.propTypes = {
   /**
@@ -97,7 +112,7 @@ const Home = (props) => {
 
     // <div>
     //   {/* <GoogleDrive /> */}
-    //   <Blog />
+
     // </div>
 
     // <Grid container>
@@ -139,7 +154,13 @@ const Home = (props) => {
     //   <Button type="submit"> upload</Button>
     // </form>
     <div>
-      <input type="file" name="file" multiple onChange={onChangeHandler} />
+      {/* <Blog /> */}
+      <MainFeaturedPost post={mainFeaturedPost} />
+      {/* <Pricing /> */}
+      <div style={{ margin: "10px" }}>
+        <Pricing />
+      </div>
+      {/* <input type="file" name="file" multiple onChange={onChangeHandler} />
       <Button variant="contained" color="primary" onClick={onClickHandler}>
         Upload
       </Button>
@@ -149,6 +170,10 @@ const Home = (props) => {
         </Progress>
       </div>
       <LinearProgressWithLabel value={loaded} />
+
+      <PayPalButton />
+      <Paypal /> */}
+      {/* <MaterialTable /> */}
     </div>
     // <div>
     //   <Button
@@ -221,4 +246,4 @@ const Home = (props) => {
   );
 };
 
-export default Home;
+export default withRouter(Home);

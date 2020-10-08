@@ -7,13 +7,24 @@ import Header from "./components/landingPage/Header";
 import Blog from "./components/landingPage/Blog";
 import CustomHeader from "./components/header/CustomHeader";
 
+import { Paper, ThemeProvider, createMuiTheme } from "@material-ui/core";
 function App() {
+  const [dark, setDark] = React.useState(false);
+  const theme = createMuiTheme({
+    palette: {
+      type: dark ? "dark" : "light",
+    },
+  });
   return (
     <BrowserRouter>
-      {/* <ResponsiveDrawer /> */}
-      <CustomHeader />
-      {/* <Header /> */}
-      {/* <Blog /> */}
+      <ThemeProvider theme={theme}>
+        <Paper>
+          {/* <ResponsiveDrawer /> */}
+          <CustomHeader dark={dark} setDark={setDark} />
+        </Paper>
+        {/* <Header /> */}
+        {/* <Blog /> */}
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

@@ -1,12 +1,13 @@
 var mongoose = require("mongoose");
 const Joi = require("@hapi/joi"); //for validating data in mongoose
+// const { bool, boolean } = require("@hapi/joi");
 
 var userSchema = mongoose.Schema({
   fname: String,
   lname: String,
   email: String,
   password: String,
-  role: { type: String, default: "common" },
+  role: { type: Boolean, default: false },
 });
 var User = mongoose.model("users", userSchema);
 

@@ -8,6 +8,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Collapse from "@material-ui/core/Collapse";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import DraftsIcon from "@material-ui/icons/Drafts";
+import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import SendIcon from "@material-ui/icons/Send";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -18,6 +19,8 @@ import { withRouter } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import HomeIcon from "@material-ui/icons/Home";
+import userService from "../../services/UserService";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,7 +46,7 @@ const CustomList = (props) => {
   const isRetina = useMediaQuery({ query: "(min-resolution: 2dppx)" });
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
-
+  const isLoggedInRedux = useSelector((state) => state.login.isloggedin);
   const handleClick = () => {
     setOpen(!open);
   };
@@ -97,21 +100,6 @@ const CustomList = (props) => {
             <ListItemText primary="Sign in" />
           </ListItem>
         </List>
-        <List component="div" disablePadding>
-          <ListItem
-            button
-            className={classes.nested}
-            onClick={() => {
-              props.history.push("/pricing");
-              if (isTabletOrMobileDevice) props.handleDrawerToggle();
-            }}
-          >
-            <ListItemIcon>
-              <AccountCircleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Pricing" />
-          </ListItem>
-        </List>
         <List
           component="div"
           disablePadding
@@ -132,7 +120,23 @@ const CustomList = (props) => {
             button
             className={classes.nested}
             onClick={() => {
-              props.history.push("/order");
+              props.history.push("/pricing");
+              if (isTabletOrMobileDevice) props.handleDrawerToggle();
+            }}
+          >
+            <ListItemIcon>
+              <MonetizationOnIcon />
+            </ListItemIcon>
+            <ListItemText primary="Pricing" />
+          </ListItem>
+        </List>
+
+        <List component="div" disablePadding>
+          <ListItem
+            button
+            className={classes.nested}
+            onClick={() => {
+              props.history.push("/pricing");
               if (isTabletOrMobileDevice) props.handleDrawerToggle();
             }}
           >
@@ -142,36 +146,44 @@ const CustomList = (props) => {
             <ListItemText primary="Place order" />
           </ListItem>
         </List>
-        <List component="div" disablePadding>
-          <ListItem
-            button
-            className={classes.nested}
-            onClick={() => {
-              props.history.push("/userdashboard");
-              if (isTabletOrMobileDevice) props.handleDrawerToggle();
-            }}
-          >
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="User Dashboard" />
-          </ListItem>
-        </List>
-        <List component="div" disablePadding>
-          <ListItem
-            button
-            className={classes.nested}
-            onClick={() => {
-              props.history.push("/admindashboard");
-              if (isTabletOrMobileDevice) props.handleDrawerToggle();
-            }}
-          >
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="Admin Dashboard" />
-          </ListItem>
-        </List>
+        {isLoggedInRedux ? (
+          <List component="div" disablePadding>
+            <ListItem
+              button
+              className={classes.nested}
+              onClick={() => {
+                props.history.push("/userdashboard");
+                if (isTabletOrMobileDevice) props.handleDrawerToggle();
+              }}
+            >
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="User Dashboard" />
+            </ListItem>
+          </List>
+        ) : (
+          <></>
+        )}
+        {isLoggedInRedux && userService.isAdmin() ? (
+          <List component="div" disablePadding>
+            <ListItem
+              button
+              className={classes.nested}
+              onClick={() => {
+                props.history.push("/admindashboard");
+                if (isTabletOrMobileDevice) props.handleDrawerToggle();
+              }}
+            >
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Admin Dashboard" />
+            </ListItem>
+          </List>
+        ) : (
+          <></>
+        )}
         {/* <List component="div" disablePadding>
           <ListItem
             button
