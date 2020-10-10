@@ -89,7 +89,7 @@ const Signup2 = (props) => {
     setLoginProgress(true);
     userService
       .UserReg({
-        email: email,
+        email: email.toLowerCase(),
         password: password,
         fname: fname,
         lname: lname,
