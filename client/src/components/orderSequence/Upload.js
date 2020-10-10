@@ -17,6 +17,7 @@ import {
 } from "@material-ui/core";
 import userService from "../../services/UserService";
 import { baseURL } from "../../services/URL";
+import MaterialSnackBar from "../snackBar/MaterialSnackBar";
 function LinearProgressWithLabel(props) {
   return (
     <Box display="flex" alignItems="center">
@@ -45,7 +46,8 @@ const Upload = (props) => {
   const [selectedFileName, setSelectedFileName] = React.useState("");
   const [reload, setReload] = React.useState(false);
   const [filesID, setFilesID] = React.useState(null);
-
+  const [materialMessage, setMaterialMessage] = React.useState("");
+  const [openMaterialSnackBar, setOpenMaterialSnackBar] = React.useState(false);
   // const [loaded, setLoaded] = React.useState(0);
 
   const onChangeHandler = (event) => {
@@ -65,6 +67,7 @@ const Upload = (props) => {
     }
     Axios.post(
       baseURL() +
+        "/storage/" +
         "/upload/" +
         userService.getloggedinuser()._id +
         "/" +
@@ -77,11 +80,18 @@ const Upload = (props) => {
           props.setLoaded((ProgressEvent.loaded / ProgressEvent.total) * 100);
         },
       }
-    ).then((res) => {
-      console.log("Response Files id: " + res.data);
-      props.setFilesId(res.data);
-      setFilesID(res.data);
-    });
+    )
+      .then((res) => {
+        console.log("Response Files id: " + res.data);
+        props.setFilesId(res.data);
+        setFilesID(res.data);
+        setMaterialMessage("Files uploaded");
+        setOpenMaterialSnackBar(true);
+      })
+      .catch((err) => {
+        setMaterialMessage("There was an error uploading files!");
+        setOpenMaterialSnackBar(true);
+      });
   };
 
   //till upload
@@ -173,7 +183,11 @@ const Upload = (props) => {
                 </Button>
               </FormControl>
             )}
-
+            <MaterialSnackBar
+              open={openMaterialSnackBar}
+              setOpen={setOpenMaterialSnackBar}
+              materialMessage={materialMessage}
+            />
             <Grid container>
               <Grid item xs={12}>
                 <div style={{ marginTop: "10px" }}>

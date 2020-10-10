@@ -5,11 +5,12 @@ class OrderServices extends GenericService {
     super();
   }
 
-  getFinalOrder = () => this.get("allorder/finalorder");
+  getFinalOrder = () => this.get("storage/allorder/finalorder");
   // getFiles = (id) => this.get("allfiles/" + id);
-  getFilesAndDownload = (id) => this.get("allfilesDownload/" + id);
+  getFilesAndDownload = (id) => this.get("storage/allfilesDownload/" + id);
   getFilesAndDownloadtemp = (id) =>
     this.get("todown/567470fd1e7311c6163d6dfc87df8400.mp4");
+  delOrder = (id) => this.get("storage/delete/finalorder/" + id);
 }
 
 let orderServices = new OrderServices();

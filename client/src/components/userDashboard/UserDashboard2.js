@@ -8,8 +8,10 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
@@ -109,7 +111,7 @@ function Row(props) {
     setTimeout(() => {
       const response = {
         // file: "http://localhost:4000/down/00a5d83a7e5b79f52ad8006a3aa58c52.mp4",
-        file: baseURL() + "/down/" + props.downloadLinks[0],
+        file: baseURL() + "/storage/" + "/down/" + props.downloadLinks[0],
       };
       // server sent the url to the file!
       // now, let's download:
@@ -118,7 +120,7 @@ function Row(props) {
 
       props.downloadLinks.map((item, index) => {
         // window.location.href = "http://localhost:4000/down/" + item;
-        window.open(baseURL() + "/down/" + item);
+        window.open(baseURL() + "/storage/" + "/down/" + item);
       });
       // you could also do:
       // window.open(response.file);
@@ -152,7 +154,14 @@ function Row(props) {
       data.append("file", selectedFile[x]);
     }
     Axios.post(
-      baseURL() + "/upload/admin/" + row._id + "/" + filesID + "/" + status,
+      baseURL() +
+        "/storage/" +
+        "/upload/admin/" +
+        row._id +
+        "/" +
+        filesID +
+        "/" +
+        status,
 
       data,
       {
@@ -253,33 +262,21 @@ function Row(props) {
                           key={index}
                           style={{ marginBottom: "5px", marginTop: "10px" }}
                         >
-                          <a href={"http://localhost:4000" + "/down/" + item}>
-                            Download
-                          </a>
-                          <a href={baseURL() + " / down / " + item}>
-                            <Chip
-                              color="primary"
-                              variant="outlined"
-                              label={item}
-                              // onDelete={() => {
-                              //   let temp = arrayOfFiles;
-                              //   for (
-                              //     let index = 0;
-                              //     index < temp.length;
-                              //     index++
-                              //   ) {
-                              //     if (temp[index].name === item.name) {
-                              //       console.log("matched 1: " + item.name);
-                              //       temp.splice(index, 1);
-                              //       console.log(temp);
-                              //       setArrayOfFiles(temp);
-                              //       onChangeHandler(temp);
-                              //     }
-                              //   }
-                              // }}
-                              variant="outlined"
-                            />
-                          </a>
+                          <IconButton
+                            aria-label="show 4 new mails"
+                            color="inherit"
+                            href={baseURL() + "/storage/" + "/down/" + item}
+                            download
+                          >
+                            <GetAppIcon />
+                          </IconButton>
+
+                          <Chip
+                            color="primary"
+                            variant="outlined"
+                            label={item}
+                            variant="outlined"
+                          />
                         </div>
                       );
                     })}
@@ -312,14 +309,14 @@ function Row(props) {
                 </Grid>
               </Grid>
 
-              <Button
+              {/* <Button
                 style={{ float: "right" }}
                 variant="contained"
                 color="primary"
                 onClick={download}
               >
                 Download Files
-              </Button>
+              </Button> */}
             </Box>
           </Collapse>
         </TableCell>

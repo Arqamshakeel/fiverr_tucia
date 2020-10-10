@@ -59,7 +59,7 @@ class UserService extends GenericService {
 
   UserReg = (data) => this.post("users/register", data);
 
-  getUserOrders = (id) => this.get("allorder/user/" + id);
+  getUserOrders = (id) => this.get("storage/allorder/user/" + id);
   getAllUsers = () => this.get("users/allusers");
   updateUser = (data) => this.post("users/update", data);
 

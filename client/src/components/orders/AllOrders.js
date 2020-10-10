@@ -3,10 +3,12 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Collapse from "@material-ui/core/Collapse";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import IconButton from "@material-ui/core/IconButton";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
@@ -28,6 +30,9 @@ import { Progress } from "reactstrap";
 import Axios from "axios";
 import userService from "../../services/UserService";
 import { baseURL } from "../../services/URL";
+import MaterialSnackBar from "../snackBar/MaterialSnackBar";
+import { useDispatch } from "react-redux";
+import { setOrder } from "../../Redux/actions/OrderBadgeAction";
 function LinearProgressWithLabel(props) {
   return (
     <Box display="flex" alignItems="center">
@@ -83,6 +88,8 @@ function Row(props) {
   const [sucessOpen, setSucessOpen] = React.useState(false);
   const [sucessMsg, setSucessMsg] = React.useState("");
   const classes = useRowStyles();
+  const [materialMessage, setMaterialMessage] = React.useState("");
+  const [openMaterialSnackBar, setOpenMaterialSnackBar] = React.useState(false);
   const getFilesAfterOpen = () => {
     setOpen(!open);
     // console.log("Opened slide");
@@ -109,7 +116,7 @@ function Row(props) {
     setTimeout(() => {
       const response = {
         // file: "http://localhost:4000/down/00a5d83a7e5b79f52ad8006a3aa58c52.mp4",
-        file: baseURL() + "/down/" + props.downloadLinks[0],
+        file: baseURL() + "/storage/" + "/down/" + props.downloadLinks[0],
       };
       // server sent the url to the file!
       // now, let's download:
@@ -118,12 +125,8 @@ function Row(props) {
 
       props.downloadLinks.map(async (item, index) => {
         // window.location.href = "http://localhost:4000/down/" + item;
-        console.log("====================================");
-        console.log(11111111);
-        console.log(props.downloadLinks.length);
-        console.log("====================================");
 
-        window.open(baseURL() + "/down/" + item);
+        window.open(baseURL() + "/storage/" + "/down/" + item);
         // await sleep(2000);
       });
       // for (let i = 0; i < props.downloadLinks.length; i++) {
@@ -172,7 +175,14 @@ function Row(props) {
       data.append("file", selectedFile[x]);
     }
     Axios.post(
-      baseURL() + "/upload/admin/" + row._id + "/" + filesID + "/" + status,
+      baseURL() +
+        "/storage/" +
+        "/upload/admin/" +
+        row._id +
+        "/" +
+        filesID +
+        "/" +
+        status,
 
       data,
       {
@@ -184,6 +194,7 @@ function Row(props) {
     ).then((res) => {
       console.log("Response Files id: " + res.data);
       // setFilesId(res.data);
+      props.setRender(true);
       openSuccessSnack();
       setFilesID(res.data);
     });
@@ -205,6 +216,11 @@ function Row(props) {
   };
   return (
     <React.Fragment>
+      <MaterialSnackBar
+        open={openMaterialSnackBar}
+        setOpen={setOpenMaterialSnackBar}
+        materialMessage={materialMessage}
+      />
       <SuccessSnackBar
         open={sucessOpen}
         setOpen={setSucessOpen}
@@ -219,6 +235,33 @@ function Row(props) {
             onClick={getFilesAfterOpen}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell>
+          {" "}
+          <IconButton
+            aria-label="show 4 new mails"
+            color="inherit"
+            className={classes.largeButton}
+            onClick={() => {
+              orderServices
+                .delOrder(row._id)
+                .then((res) => {
+                  // console.log("Deleted oRder");
+                  console.log(res);
+                  setMaterialMessage(res);
+                  setOpenMaterialSnackBar(true);
+                  props.setRender(true);
+                  // props.setOrderDeleted(true);
+                })
+                .catch((err) => {
+                  console.log(err);
+                  setMaterialMessage(err.response.data);
+                  setOpenMaterialSnackBar(true);
+                });
+            }}
+          >
+            <DeleteOutlineIcon />
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
@@ -242,7 +285,42 @@ function Row(props) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
-              <Typography variant="h4" gutterBottom component="div">
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <div>
+                    {props.downloadLinks.map((item, index) => {
+                      return (
+                        <div
+                          key={index}
+                          style={{ marginBottom: "5px", marginTop: "10px" }}
+                        >
+                          <IconButton
+                            aria-label="show 4 new mails"
+                            color="inherit"
+                            href={baseURL() + "/storage/" + "/down/" + item}
+                            download
+                          >
+                            <GetAppIcon />
+                          </IconButton>
+
+                          <Chip
+                            color="primary"
+                            variant="outlined"
+                            label={item}
+                            variant="outlined"
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </Grid>
+              </Grid>
+              <Typography
+                component="div"
+                variant="h4"
+                gutterBottom
+                component="div"
+              >
                 Instructions{" "}
               </Typography>
               <Typography variant="h6" gutterBottom component="div">
@@ -283,7 +361,11 @@ function Row(props) {
                           key={index}
                           style={{ marginBottom: "5px", marginTop: "10px" }}
                         >
-                          <a href={baseURL() + " / down / " + item.name}>
+                          <a
+                            href={
+                              baseURL() + "/storage/" + " / down / " + item.name
+                            }
+                          >
                             <Chip
                               color="primary"
                               variant="outlined"
@@ -320,7 +402,7 @@ function Row(props) {
                   <Typography>Status</Typography>
                   <Switch
                     // checked={status}
-                    checked={row.status === "true" ? "true" : status}
+                    checked={row.status === "true" ? true : status}
                     onChange={() => {
                       setStatus(!status);
                     }}
@@ -342,14 +424,14 @@ function Row(props) {
 
               <Grid container>
                 <Grid item xs={12}>
-                  <Button
+                  {/* <Button
                     style={{ float: "right" }}
                     variant="contained"
                     color="primary"
                     onClick={download}
                   >
                     Download Files
-                  </Button>
+                  </Button> */}
                 </Grid>
               </Grid>
             </Box>
@@ -368,19 +450,23 @@ const rows = [
 export default function AllOrders(props) {
   const [allOrders, setAllOrders] = React.useState([]);
   const [downloadLinks, setDownloadLinks] = React.useState([]);
+  const [render, setRender] = React.useState(false);
+  const dispatch = useDispatch();
   const getOrder = () => {
     orderServices
       .getFinalOrder()
       .then((data) => {
         console.log(data);
         setAllOrders(data);
+        setRender(false);
+        dispatch(setOrder(data.length));
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  React.useEffect(getOrder, []);
+  React.useEffect(getOrder, [render]);
 
   return (
     <TableContainer component={Paper}>
@@ -388,6 +474,7 @@ export default function AllOrders(props) {
         <TableHead>
           <TableRow>
             <TableCell />
+            <TableCell>Action</TableCell>
             <TableCell>Order ID</TableCell>
             <TableCell>Created at</TableCell>
             <TableCell>Completed at</TableCell>
@@ -416,6 +503,7 @@ export default function AllOrders(props) {
                   allOrders={allOrders}
                   key={index}
                   row={row}
+                  setRender={setRender}
                 />
               ) : (
                 <></>
@@ -431,6 +519,7 @@ export default function AllOrders(props) {
                 setDownloadLinks={setDownloadLinks}
                 allOrders={allOrders}
                 key={index}
+                setRender={setRender}
                 row={row}
               />
             ))
@@ -446,6 +535,7 @@ export default function AllOrders(props) {
                   setDownloadLinks={setDownloadLinks}
                   allOrders={allOrders}
                   key={index}
+                  setRender={setRender}
                   row={row}
                 />
               ) : (

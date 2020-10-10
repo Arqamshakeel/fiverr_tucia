@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from "react";
+import MaterialSnackBar from "../snackBar/MaterialSnackBar";
 import SnackBar from "../snackBar/SuccessSnackBar";
 import SuccessSnackBar from "../snackBar/SuccessSnackBar";
 export default function Paypal(props) {
@@ -7,8 +8,8 @@ export default function Paypal(props) {
 
   const [sucessMsg, setSucessMsg] = React.useState("");
 
-  const [open, setOpen] = React.useState(false);
-  const [msg, setmsg] = React.useState("");
+  const [materialMessage, setMaterialMessage] = React.useState("");
+  const [openMaterialSnackBar, setOpenMaterialSnackBar] = React.useState(false);
   useEffect(() => {
     window.paypal
       .Buttons({
@@ -38,8 +39,10 @@ export default function Paypal(props) {
         },
         onError: (err) => {
           console.log(err);
-          setOpen(true);
-          setmsg("There was error making transaction. Order not sent!");
+          setMaterialMessage(
+            "Order failed, there was an error during transaction."
+          );
+          setOpenMaterialSnackBar(true);
         },
       })
       .render(paypal.current);
@@ -52,7 +55,11 @@ export default function Paypal(props) {
         setOpen={setSucessOpen}
         msg={sucessMsg}
       />
-      <SnackBar open={open} setOpen={setOpen} msg={msg} />
+      <MaterialSnackBar
+        open={openMaterialSnackBar}
+        setOpen={setOpenMaterialSnackBar}
+        materialMessage={materialMessage}
+      />
       <div ref={paypal}></div>
     </div>
   );
