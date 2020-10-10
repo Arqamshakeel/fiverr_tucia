@@ -98,7 +98,12 @@ function Row(props) {
         console.log(error);
       });
   };
-  const download = () => {
+  function sleep(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
+  const download = async () => {
     console.log(props.downloadLinks[0]);
     // fake server request, getting the file url as response
     setTimeout(() => {
@@ -111,10 +116,20 @@ function Row(props) {
       // for (let index = 0; index < response.file.length; index++) {
       // window.location.href = response.file;
 
-      props.downloadLinks.map((item, index) => {
+      props.downloadLinks.map(async (item, index) => {
         // window.location.href = "http://localhost:4000/down/" + item;
+        console.log("====================================");
+        console.log(11111111);
+        console.log(props.downloadLinks.length);
+        console.log("====================================");
+
         window.open(baseURL() + "/down/" + item);
+        // await sleep(2000);
       });
+      // for (let i = 0; i < props.downloadLinks.length; i++) {
+      //   window.open(baseURL() + "/down/" + props.downloadLinks[]);
+
+      // }
       // you could also do:
       // window.open(response.file);
     }, 100);
@@ -268,28 +283,30 @@ function Row(props) {
                           key={index}
                           style={{ marginBottom: "5px", marginTop: "10px" }}
                         >
-                          <Chip
-                            color="primary"
-                            variant="outlined"
-                            label={item.name}
-                            onDelete={() => {
-                              let temp = arrayOfFiles;
-                              for (
-                                let index = 0;
-                                index < temp.length;
-                                index++
-                              ) {
-                                if (temp[index].name === item.name) {
-                                  console.log("matched 1: " + item.name);
-                                  temp.splice(index, 1);
-                                  console.log(temp);
-                                  setArrayOfFiles(temp);
-                                  onChangeHandler(temp);
+                          <a href={baseURL() + " / down / " + item.name}>
+                            <Chip
+                              color="primary"
+                              variant="outlined"
+                              label={item.name}
+                              onDelete={() => {
+                                let temp = arrayOfFiles;
+                                for (
+                                  let index = 0;
+                                  index < temp.length;
+                                  index++
+                                ) {
+                                  if (temp[index].name === item.name) {
+                                    console.log("matched 1: " + item.name);
+                                    temp.splice(index, 1);
+                                    console.log(temp);
+                                    setArrayOfFiles(temp);
+                                    onChangeHandler(temp);
+                                  }
                                 }
-                              }
-                            }}
-                            variant="outlined"
-                          />
+                              }}
+                              variant="outlined"
+                            />
+                          </a>
                         </div>
                       );
                     })}

@@ -20,8 +20,8 @@ const corsOptions = {
   credentials: true,
   methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
   //origin: "http://ec2-18-224-94-239.us-east-2.compute.amazonaws.com",
-  origin: "http://ec2-3-135-218-85.us-east-2.compute.amazonaws.com",
-  // origin: "http://localhost:3000",
+  // origin: "http://ec2-3-135-218-85.us-east-2.compute.amazonaws.com",
+  origin: "http://localhost:3000",
   // origin: "https://www.trakouts.com",
   preflightContinue: false,
 };
@@ -57,10 +57,7 @@ app.use("/order", finalOrderRouter);
 
 app.use(express.static(path.join(__dirname, "client/build")));
 app.use(function (req, res, next) {
-  res.header(
-    "Access-Control-Allow-Origin",
-    "http://ec2-3-135-218-85.us-east-2.compute.amazonaws.com"
-  );
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
@@ -72,7 +69,7 @@ const production = "mongodb://localhost:27017/";
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/client/build/index.html"));
 });
-const mongoURI = production + "trakouts";
+const mongoURI = development + "trakouts";
 
 // mongoose
 //   .connect("mongodb://localhost/mongouploads2", {
@@ -378,7 +375,7 @@ app.use(function (err, req, res, next) {
 });
 
 mongoose
-  .connect(production + "trakouts", {
+  .connect(development + "trakouts", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

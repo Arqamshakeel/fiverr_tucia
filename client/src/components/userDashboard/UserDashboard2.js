@@ -253,28 +253,33 @@ function Row(props) {
                           key={index}
                           style={{ marginBottom: "5px", marginTop: "10px" }}
                         >
-                          <Chip
-                            color="primary"
-                            variant="outlined"
-                            label={item}
-                            // onDelete={() => {
-                            //   let temp = arrayOfFiles;
-                            //   for (
-                            //     let index = 0;
-                            //     index < temp.length;
-                            //     index++
-                            //   ) {
-                            //     if (temp[index].name === item.name) {
-                            //       console.log("matched 1: " + item.name);
-                            //       temp.splice(index, 1);
-                            //       console.log(temp);
-                            //       setArrayOfFiles(temp);
-                            //       onChangeHandler(temp);
-                            //     }
-                            //   }
-                            // }}
-                            variant="outlined"
-                          />
+                          <a href={"http://localhost:4000" + "/down/" + item}>
+                            Download
+                          </a>
+                          <a href={baseURL() + " / down / " + item}>
+                            <Chip
+                              color="primary"
+                              variant="outlined"
+                              label={item}
+                              // onDelete={() => {
+                              //   let temp = arrayOfFiles;
+                              //   for (
+                              //     let index = 0;
+                              //     index < temp.length;
+                              //     index++
+                              //   ) {
+                              //     if (temp[index].name === item.name) {
+                              //       console.log("matched 1: " + item.name);
+                              //       temp.splice(index, 1);
+                              //       console.log(temp);
+                              //       setArrayOfFiles(temp);
+                              //       onChangeHandler(temp);
+                              //     }
+                              //   }
+                              // }}
+                              variant="outlined"
+                            />
+                          </a>
                         </div>
                       );
                     })}
@@ -340,7 +345,7 @@ export default function UserDashboard2(props) {
           setAllOrders(data);
         })
         .catch((err) => {
-          console.log(err.response.data);
+          console.log(err);
         });
     }
   };
