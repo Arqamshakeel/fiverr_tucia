@@ -20,7 +20,9 @@ import { useMediaQuery } from "react-responsive";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import HomeIcon from "@material-ui/icons/Home";
 import userService from "../../services/UserService";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { falseLogin } from "../../Redux/actions/LoginAction";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,7 +52,7 @@ const CustomList = (props) => {
   const handleClick = () => {
     setOpen(!open);
   };
-
+  const dispatch = useDispatch();
   return (
     <List
       component="nav"
@@ -85,36 +87,60 @@ const CustomList = (props) => {
             <ListItemText primary="Home" />
           </ListItem>
         </List>
-        <List component="div" disablePadding>
-          <ListItem
-            button
-            className={classes.nested}
+        {userService.isLoggedin() ? (
+          <List component="div" disablePadding>
+            <ListItem
+              button
+              className={classes.nested}
+              onClick={() => {
+                userService.logout();
+                dispatch(falseLogin());
+                if (isTabletOrMobileDevice) props.handleDrawerToggle();
+              }}
+            >
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Sign out"} />
+            </ListItem>
+          </List>
+        ) : (
+          <List component="div" disablePadding>
+            <ListItem
+              button
+              className={classes.nested}
+              onClick={() => {
+                props.history.push("/signin");
+                if (isTabletOrMobileDevice) props.handleDrawerToggle();
+              }}
+            >
+              <ListItemIcon>
+                <AccountCircleIcon />
+              </ListItemIcon>
+              <ListItemText primary="Sign in" />
+            </ListItem>
+          </List>
+        )}
+
+        {!userService.isLoggedin() ? (
+          <List
+            component="div"
+            disablePadding
             onClick={() => {
-              props.history.push("/signin");
+              props.history.push("/signup");
               if (isTabletOrMobileDevice) props.handleDrawerToggle();
             }}
           >
-            <ListItemIcon>
-              <AccountCircleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Sign in" />
-          </ListItem>
-        </List>
-        <List
-          component="div"
-          disablePadding
-          onClick={() => {
-            props.history.push("/signup");
-            if (isTabletOrMobileDevice) props.handleDrawerToggle();
-          }}
-        >
-          <ListItem button className={classes.nested}>
-            <ListItemIcon>
-              <PersonAddIcon />
-            </ListItemIcon>
-            <ListItemText primary="Register" />
-          </ListItem>
-        </List>
+            <ListItem button className={classes.nested}>
+              <ListItemIcon>
+                <PersonAddIcon />
+              </ListItemIcon>
+              <ListItemText primary="Register" />
+            </ListItem>
+          </List>
+        ) : (
+          <></>
+        )}
         <List component="div" disablePadding>
           <ListItem
             button
