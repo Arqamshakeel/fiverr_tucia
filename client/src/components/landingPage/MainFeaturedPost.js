@@ -67,7 +67,7 @@ const MainFeaturedPost = (props) => {
               color="inherit"
               gutterBottom
             >
-              Edit you audio files from us.
+              Edit your audio files from us.
             </Typography>
             <Typography variant="h5" paragraph>
               Best Pricing. Amazing Editing.
