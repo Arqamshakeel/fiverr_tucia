@@ -5,15 +5,12 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import Collapse from "@material-ui/core/Collapse";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import DraftsIcon from "@material-ui/icons/Drafts";
+
+import ContactSupportIcon from "@material-ui/icons/ContactSupport";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import SendIcon from "@material-ui/icons/Send";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import StarBorder from "@material-ui/icons/StarBorder";
+
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import { withRouter } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
@@ -59,158 +56,165 @@ const CustomList = (props) => {
       aria-labelledby="nested-list-subheader"
       subheader={
         <ListSubheader component="div" id="nested-list-subheader">
-          Shortcuts
+          Trakouts
         </ListSubheader>
       }
       className={classes.root}
     >
-      <ListItem button onClick={handleClick}>
-        <ListItemIcon>
-          <InboxIcon />
-        </ListItemIcon>
-        <ListItemText primary="Shortcuts" />
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItem>
-      <Collapse in={open} timeout="auto" unmountOnExit>
+      <List component="div" disablePadding>
+        <ListItem
+          button
+          className={classes.nested}
+          onClick={() => {
+            props.history.push("/");
+            if (isTabletOrMobileDevice) props.handleDrawerToggle();
+          }}
+        >
+          <ListItemIcon>
+            <HomeIcon />
+          </ListItemIcon>
+          <ListItemText primary="Home" />
+        </ListItem>
+      </List>
+      {userService.isLoggedin() ? (
         <List component="div" disablePadding>
           <ListItem
             button
             className={classes.nested}
             onClick={() => {
-              props.history.push("/");
+              userService.logout();
+              dispatch(falseLogin());
               if (isTabletOrMobileDevice) props.handleDrawerToggle();
             }}
           >
             <ListItemIcon>
-              <HomeIcon />
+              <ExitToAppIcon />
             </ListItemIcon>
-            <ListItemText primary="Home" />
+            <ListItemText primary={"Sign out"} />
           </ListItem>
         </List>
-        {userService.isLoggedin() ? (
-          <List component="div" disablePadding>
-            <ListItem
-              button
-              className={classes.nested}
-              onClick={() => {
-                userService.logout();
-                dispatch(falseLogin());
-                if (isTabletOrMobileDevice) props.handleDrawerToggle();
-              }}
-            >
-              <ListItemIcon>
-                <ExitToAppIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Sign out"} />
-            </ListItem>
-          </List>
-        ) : (
-          <List component="div" disablePadding>
-            <ListItem
-              button
-              className={classes.nested}
-              onClick={() => {
-                props.history.push("/signin");
-                if (isTabletOrMobileDevice) props.handleDrawerToggle();
-              }}
-            >
-              <ListItemIcon>
-                <AccountCircleIcon />
-              </ListItemIcon>
-              <ListItemText primary="Sign in" />
-            </ListItem>
-          </List>
-        )}
+      ) : (
+        <List component="div" disablePadding>
+          <ListItem
+            button
+            className={classes.nested}
+            onClick={() => {
+              props.history.push("/signin");
+              if (isTabletOrMobileDevice) props.handleDrawerToggle();
+            }}
+          >
+            <ListItemIcon>
+              <AccountCircleIcon />
+            </ListItemIcon>
+            <ListItemText primary="Sign in" />
+          </ListItem>
+        </List>
+      )}
 
-        {!userService.isLoggedin() ? (
-          <List
-            component="div"
-            disablePadding
-            onClick={() => {
-              props.history.push("/signup");
-              if (isTabletOrMobileDevice) props.handleDrawerToggle();
-            }}
-          >
-            <ListItem button className={classes.nested}>
-              <ListItemIcon>
-                <PersonAddIcon />
-              </ListItemIcon>
-              <ListItemText primary="Register" />
-            </ListItem>
-          </List>
-        ) : (
-          <></>
-        )}
-        <List component="div" disablePadding>
-          <ListItem
-            button
-            className={classes.nested}
-            onClick={() => {
-              props.history.push("/pricing");
-              if (isTabletOrMobileDevice) props.handleDrawerToggle();
-            }}
-          >
+      {!userService.isLoggedin() ? (
+        <List
+          component="div"
+          disablePadding
+          onClick={() => {
+            props.history.push("/signup");
+            if (isTabletOrMobileDevice) props.handleDrawerToggle();
+          }}
+        >
+          <ListItem button className={classes.nested}>
             <ListItemIcon>
-              <MonetizationOnIcon />
+              <PersonAddIcon />
             </ListItemIcon>
-            <ListItemText primary="Pricing" />
+            <ListItemText primary="Register" />
           </ListItem>
         </List>
+      ) : (
+        <></>
+      )}
+      <List component="div" disablePadding>
+        <ListItem
+          button
+          className={classes.nested}
+          onClick={() => {
+            props.history.push("/pricing");
+            if (isTabletOrMobileDevice) props.handleDrawerToggle();
+          }}
+        >
+          <ListItemIcon>
+            <MonetizationOnIcon />
+          </ListItemIcon>
+          <ListItemText primary="Pricing" />
+        </ListItem>
+      </List>
 
+      <List component="div" disablePadding>
+        <ListItem
+          button
+          className={classes.nested}
+          onClick={() => {
+            props.history.push("/pricing");
+            if (isTabletOrMobileDevice) props.handleDrawerToggle();
+          }}
+        >
+          <ListItemIcon>
+            <SendIcon />
+          </ListItemIcon>
+          <ListItemText primary="Place order" />
+        </ListItem>
+      </List>
+      {isLoggedInRedux ? (
         <List component="div" disablePadding>
           <ListItem
             button
             className={classes.nested}
             onClick={() => {
-              props.history.push("/pricing");
+              props.history.push("/userdashboard");
               if (isTabletOrMobileDevice) props.handleDrawerToggle();
             }}
           >
             <ListItemIcon>
-              <SendIcon />
+              <DashboardIcon />
             </ListItemIcon>
-            <ListItemText primary="Place order" />
+            <ListItemText primary="User Dashboard" />
           </ListItem>
         </List>
-        {isLoggedInRedux ? (
-          <List component="div" disablePadding>
-            <ListItem
-              button
-              className={classes.nested}
-              onClick={() => {
-                props.history.push("/userdashboard");
-                if (isTabletOrMobileDevice) props.handleDrawerToggle();
-              }}
-            >
-              <ListItemIcon>
-                <DashboardIcon />
-              </ListItemIcon>
-              <ListItemText primary="User Dashboard" />
-            </ListItem>
-          </List>
-        ) : (
-          <></>
-        )}
-        {isLoggedInRedux && userService.isAdmin() ? (
-          <List component="div" disablePadding>
-            <ListItem
-              button
-              className={classes.nested}
-              onClick={() => {
-                props.history.push("/admindashboard");
-                if (isTabletOrMobileDevice) props.handleDrawerToggle();
-              }}
-            >
-              <ListItemIcon>
-                <DashboardIcon />
-              </ListItemIcon>
-              <ListItemText primary="Admin Dashboard" />
-            </ListItem>
-          </List>
-        ) : (
-          <></>
-        )}
-        {/* <List component="div" disablePadding>
+      ) : (
+        <></>
+      )}
+      {isLoggedInRedux && userService.isAdmin() ? (
+        <List component="div" disablePadding>
+          <ListItem
+            button
+            className={classes.nested}
+            onClick={() => {
+              props.history.push("/admindashboard");
+              if (isTabletOrMobileDevice) props.handleDrawerToggle();
+            }}
+          >
+            <ListItemIcon>
+              <DashboardIcon />
+            </ListItemIcon>
+            <ListItemText primary="Admin Dashboard" />
+          </ListItem>
+        </List>
+      ) : (
+        <></>
+      )}
+      <List component="div" disablePadding>
+        <ListItem
+          button
+          className={classes.nested}
+          onClick={() => {
+            props.history.push("/faq");
+            if (isTabletOrMobileDevice) props.handleDrawerToggle();
+          }}
+        >
+          <ListItemIcon>
+            <ContactSupportIcon />
+          </ListItemIcon>
+          <ListItemText primary="FAQ" />
+        </ListItem>
+      </List>
+      {/* <List component="div" disablePadding>
           <ListItem
             button
             className={classes.nested}
@@ -226,7 +230,7 @@ const CustomList = (props) => {
           </ListItem>
         </List> */}
 
-        {/* <List
+      {/* <List
           component="div"
           disablePadding
           onClick={() => {
@@ -241,7 +245,6 @@ const CustomList = (props) => {
             <ListItemText primary="Delete" />
           </ListItem>
         </List> */}
-      </Collapse>
     </List>
   );
 };

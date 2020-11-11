@@ -147,6 +147,11 @@ const Pricing = (props) => {
   console.log("Prcing" + selectedPricing);
   dispatch(one());
   console.log("Prcing" + selectedPricing);
+
+  console.log("====================================");
+  console.log("Pricing");
+  console.log(props.history.location);
+  console.log("====================================");
   return (
     <div style={{ margin: "10px" }}>
       <React.Fragment>

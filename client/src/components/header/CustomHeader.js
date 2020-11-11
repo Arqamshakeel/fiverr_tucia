@@ -213,6 +213,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CustomHeader(props) {
+  console.log("====================================");
+  console.log("HEADER");
+  console.log(props.history.location);
+  console.log("====================================");
   const isDesktopOrLaptop = useMediaQuery({
     query: "(min-device-width: 1224px)",
   });
@@ -488,53 +492,54 @@ function CustomHeader(props) {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar className={classes.customizeToolbar}>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
-            Trakouts
-          </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <Autocomplete
-              className={classes.inputInput}
-              options={top100Films}
-              getOptionLabel={(option) => option.name}
-              onInputChange={(event, value) => {
-                setSearchTextField(value);
-              }}
-              renderInput={(params) => (
-                <TextField
-                  onChange={(e) => {
-                    setSearchTextField(e.target.value);
-                  }}
-                  value={searchTextField}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Search…"
-                  {...params}
-                  // renderInput={(params) => (
-                  //   <InputBase
-                  //     placeholder="Search…"
-                  //     ref={params.ref}
-                  //     ref={params.InputProps.ref}
-                  //     inputProps={params.inputProps}
-                  //     inputProps={{ "aria-label": "search" }}
-                  //   />
-                  // )}
-                />
-              )}
-            />
-            {/* <InputBase
+      {props.history.location.pathname != "/" ? (
+        <AppBar position="fixed" className={classes.appBar}>
+          <Toolbar className={classes.customizeToolbar}>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              className={classes.menuButton}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography className={classes.title} variant="h6" noWrap>
+              Trakouts
+            </Typography>
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <Autocomplete
+                className={classes.inputInput}
+                options={top100Films}
+                getOptionLabel={(option) => option.name}
+                onInputChange={(event, value) => {
+                  setSearchTextField(value);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    onChange={(e) => {
+                      setSearchTextField(e.target.value);
+                    }}
+                    value={searchTextField}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Search…"
+                    {...params}
+                    // renderInput={(params) => (
+                    //   <InputBase
+                    //     placeholder="Search…"
+                    //     ref={params.ref}
+                    //     ref={params.InputProps.ref}
+                    //     inputProps={params.inputProps}
+                    //     inputProps={{ "aria-label": "search" }}
+                    //   />
+                    // )}
+                  />
+                )}
+              />
+              {/* <InputBase
               placeholder="Search…"
               classes={{
                 root: classes.inputRoot,
@@ -542,69 +547,69 @@ function CustomHeader(props) {
               }}
               inputProps={{ "aria-label": "search" }}
             ></InputBase> */}
-          </div>
-          <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
-            {isLoggedInRedux ? (
-              <span>
-                <Button
-                  variant="contained"
-                  color="secondary"
+            </div>
+            <div className={classes.grow} />
+            <div className={classes.sectionDesktop}>
+              {isLoggedInRedux ? (
+                <span>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      userService.logout();
+                      dispatch(falseLogin());
+                    }}
+                  >
+                    <Typography variant="button" variant="h6">
+                      Sign out
+                    </Typography>
+                  </Button>
+                </span>
+              ) : (
+                <div>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      props.history.push("/signin");
+                    }}
+                  >
+                    <Typography variant="button" variant="h6">
+                      Sign in
+                    </Typography>
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      props.history.push("/signup");
+                    }}
+                    variant="outlined"
+                    color="secondary"
+                    style={{ marginLeft: "8px" }}
+                  >
+                    <Typography variant="button" variant="h6">
+                      Register
+                    </Typography>
+                  </Button>
+                </div>
+              )}
+              {isLoggedInRedux && userService.isAdmin() ? (
+                <IconButton
+                  aria-label="show 4 new mails"
+                  color="inherit"
                   onClick={() => {
-                    userService.logout();
-                    dispatch(falseLogin());
+                    props.history.push("/admindashboard");
                   }}
                 >
-                  <Typography variant="button" variant="h6">
-                    Sign out
-                  </Typography>
-                </Button>
-              </span>
-            ) : (
-              <div>
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => {
-                    props.history.push("/signin");
-                  }}
-                >
-                  <Typography variant="button" variant="h6">
-                    Sign in
-                  </Typography>
-                </Button>
-                <Button
-                  size="small"
-                  onClick={() => {
-                    props.history.push("/signup");
-                  }}
-                  variant="outlined"
-                  color="secondary"
-                  style={{ marginLeft: "8px" }}
-                >
-                  <Typography variant="button" variant="h6">
-                    Register
-                  </Typography>
-                </Button>
-              </div>
-            )}
-            {isLoggedInRedux && userService.isAdmin() ? (
-              <IconButton
-                aria-label="show 4 new mails"
-                color="inherit"
-                onClick={() => {
-                  props.history.push("/admindashboard");
-                }}
-              >
-                <Badge badgeContent={orderBadge} color="secondary">
-                  <MessageIcon />
-                </Badge>
-              </IconButton>
-            ) : (
-              <></>
-            )}
-            {/* <IconButton
+                  <Badge badgeContent={orderBadge} color="secondary">
+                    <MessageIcon />
+                  </Badge>
+                </IconButton>
+              ) : (
+                <></>
+              )}
+              {/* <IconButton
               aria-label="show 17 new notifications"
               color="inherit"
               onClick={() => {
@@ -615,18 +620,18 @@ function CustomHeader(props) {
                 <ShoppingCartIcon />
               </Badge>
             </IconButton> */}
-            <IconButton
-              aria-label="show 17 new notifications"
-              color="inherit"
-              onClick={() => {
-                props.setDark(!props.dark);
-              }}
-            >
-              <Badge color="secondary">
-                <Brightness4Icon />
-              </Badge>
-            </IconButton>
-            {/* <IconButton
+              <IconButton
+                aria-label="show 17 new notifications"
+                color="inherit"
+                onClick={() => {
+                  props.setDark(!props.dark);
+                }}
+              >
+                <Badge color="secondary">
+                  <Brightness4Icon />
+                </Badge>
+              </IconButton>
+              {/* <IconButton
               edge="end"
               aria-label="account of current user"
               aria-controls={menuId}
@@ -636,40 +641,43 @@ function CustomHeader(props) {
             >
               <AccountCircle />
             </IconButton> */}
-            {/* <div>
+              {/* <div>
               {userService.getloggedinuser()
                 ? userService.getloggedinuser()._id
                 : null}
             </div> */}
-            {isLoggedInRedux ? (
-              <Tooltip title={userService.getloggedinuser().name}>
-                <span style={{ margin: "auto", marginLeft: "10px" }}>
-                  <Avatar aria-label="recipe" className={classes.avatar}>
-                    {userService.getloggedinuser().name
-                      ? userService.getloggedinuser().name[0].toUpperCase()
-                      : null}
-                  </Avatar>
-                </span>
-              </Tooltip>
-            ) : (
-              <></>
-            )}
-          </div>
+              {isLoggedInRedux ? (
+                <Tooltip title={userService.getloggedinuser().name}>
+                  <span style={{ margin: "auto", marginLeft: "10px" }}>
+                    <Avatar aria-label="recipe" className={classes.avatar}>
+                      {userService.getloggedinuser().name
+                        ? userService.getloggedinuser().name[0].toUpperCase()
+                        : null}
+                    </Avatar>
+                  </span>
+                </Tooltip>
+              ) : (
+                <></>
+              )}
+            </div>
 
-          <div className={classes.sectionMobile}>
-            <IconButton
-              className={classes.largeButton}
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon className={classes.largeIcon} />
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
+            <div className={classes.sectionMobile}>
+              <IconButton
+                className={classes.largeButton}
+                aria-label="show more"
+                aria-controls={mobileMenuId}
+                aria-haspopup="true"
+                onClick={handleMobileMenuOpen}
+                color="inherit"
+              >
+                <MoreIcon className={classes.largeIcon} />
+              </IconButton>
+            </div>
+          </Toolbar>
+        </AppBar>
+      ) : (
+        <></>
+      )}
       {renderMobileMenu}
       {renderMenu}
       <nav className={classes.drawer} aria-label="mailbox folders">
@@ -704,7 +712,11 @@ function CustomHeader(props) {
       </nav>
 
       <main className={classes.content}>
-        <div className={classes.toolbar} />
+        {props.history.location.pathname != "/" ? (
+          <div className={classes.toolbar} />
+        ) : (
+          <></>
+        )}
         <Routes />
       </main>
     </div>

@@ -16,6 +16,10 @@ import Order2 from "../orderSequence/Order2";
 import UserDashboard2 from "../userDashboard/UserDashboard2";
 import AdminTabs from "../admin/AdminTabs";
 import UserTabs from "../user/UserTabs";
+import MediaCard from "../faq/MediaCard";
+import FAQ from "../faq/FAQ";
+import Questions from "../faq/Questions";
+import FaqAdminPanel from "../faq/FaqAdminPanel";
 const Routes = () => {
   const isDesktopOrLaptop = useMediaQuery({
     query: "(min-device-width: 1224px)",
@@ -37,6 +41,9 @@ const Routes = () => {
         <Route path="/userdashboard" exact component={UserTabs} />
         <Route path="/admindashboard" exact component={AdminTabs} />
         <Route path="/pricing" exact component={Pricing} />
+        <Route path="/faq" exact component={FAQ} />
+        <Route path="/questions" exact component={Questions} />
+        <Route path="/faqadminpanel" exact component={FaqAdminPanel} />
       </Switch>
       <Footer />
       {isTabletOrMobileDevice ? (

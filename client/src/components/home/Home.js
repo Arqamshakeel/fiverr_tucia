@@ -86,6 +86,11 @@ const Home = (props) => {
     //   .catch((error) => {});
   };
 
+  console.log("====================================");
+  console.log("HOME");
+  console.log(props.history.location);
+  console.log("====================================");
+
   return (
     <div>
       <MainFeaturedPost post={mainFeaturedPost} />
