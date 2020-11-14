@@ -25,10 +25,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Family mart
-      </Link>{" "}
-      {new Date().getFullYear()}
+      <Link color="inherit">Trakouts.com</Link> {new Date().getFullYear()}
       {"."}
     </Typography>
   );
@@ -258,9 +255,7 @@ export default function Settings(props) {
           <CustomBackdrop open={loginProgress} setOpen={setLoginProgress} />
         </form>
       </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
+      <Box mt={5}>{/* <Copyright /> */}</Box>
     </Container>
   );
 }
