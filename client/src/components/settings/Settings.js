@@ -98,6 +98,26 @@ export default function Settings(props) {
       })
       .catch(() => {});
   };
+
+  const forgetPasswordBtn = () => {
+    userService
+      .forgetPassword(userService.getloggedinuser()._id, {
+        fname: fname,
+        lname: lname,
+        password: password,
+        newPassword: newPassword,
+        email: email,
+      })
+      .then((res) => {
+        console.log("====================================");
+        console.log("OKKKKKKKKKK");
+        console.log("====================================");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const updateUserDetails = () => {
     if (newPassword === "") {
       setOpen(true);
@@ -221,6 +241,9 @@ export default function Settings(props) {
                   setNewPassword(e.target.value);
                 }}
               />
+            </Grid>
+            <Grid item xs={12}>
+              <Button onClick={forgetPasswordBtn}>Forget pasword</Button>
             </Grid>
           </Grid>
           <Button

@@ -1,5 +1,6 @@
 import { Button, Grid, makeStyles, Typography } from "@material-ui/core";
 import React from "react";
+import AddFAB from "./AddFAB";
 import MediaCard from "./MediaCard";
 const useStyles = makeStyles({
   root: {
@@ -47,6 +48,7 @@ const FAQ = (props) => {
       <div style={{ margin: "20px 100px 100px 100px" }}>
         <MediaCard />
         <MediaCard />
+        <AddFAB />
       </div>
     </div>
   );

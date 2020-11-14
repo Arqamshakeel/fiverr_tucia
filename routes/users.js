@@ -8,6 +8,8 @@ var _ = require("lodash");
 var jwt = require("jsonwebtoken");
 var validateUserRegMW = require("../middlewares/authUserReg");
 var validateUserLoginMW = require("../middlewares/authUserLog");
+const nodemailer = require("nodemailer");
+var generator = require("generate-password");
 router.get("/", async (req, res, next) => {
   let user = await User.find();
   res.send(user[0]._id);
@@ -97,5 +99,50 @@ router.post("/login", validateUserLoginMW, async (req, res) => {
   let user2 = jwt.verify(token, config.get("jwt"));
   return res.send({ ok: "login successfull", token, user2 });
 });
+router.post("/forgetPassword/:id", async (req, res) => {
+  console.log(req.params.id);
+
+  var password = generator.generate({
+    length: 10,
+    numbers: true,
+  });
+
+  console.log(password);
+
+  console.log(req.body.email);
+  await sendMail(req.body.email, password);
+  return res.send();
+});
+
+async function sendMail(r_email, r_newpassword) {
+  // Generate test SMTP service account from ethereal.email
+  // Only needed if you don't have a real mail account for testing
+  let testAccount = await nodemailer.createTestAccount();
+
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "trakouts@gmail.com",
+      pass: "fiverr123!",
+    },
+  });
+
+  // send mail with defined transport object
+  let info = await transporter.sendMail({
+    from: "trakouts@gmail.com", // sender address
+    to: "arqam.android@gmail.com", // list of receivers
+    subject: "Hello This is a TEST for password recovery✔", // Subject line
+    text: `Hello ${r_email}, Your new trakouts passoword is ${r_newpassword}`, // plain text body
+    html: `<b>Hello ${r_email}, Your new trakouts passoword is ${r_newpassword}</b>`, // html body
+  });
+
+  console.log("Message sent: %s", info.messageId);
+  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+  // Preview only available when sending through an Ethereal account
+  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+}
 
 module.exports = router;
