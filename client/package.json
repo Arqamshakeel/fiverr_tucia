@@ -21,6 +21,8 @@
     "push.js": "^1.0.12",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-facebook-login": "^4.1.1",
+    "react-google-login": "^5.1.22",
     "react-google-picker": "^0.1.0",
     "react-redux": "^7.2.1",
     "react-responsive": "^8.1.0",

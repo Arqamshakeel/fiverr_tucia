@@ -7,6 +7,8 @@ var userSchema = mongoose.Schema({
   lname: String,
   email: String,
   password: String,
+  socialId: String,
+  socialType: String,
   role: { type: Boolean, default: false },
 });
 var User = mongoose.model("users", userSchema);

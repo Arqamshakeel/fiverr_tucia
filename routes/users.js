@@ -30,6 +30,21 @@ router.post("/register", validateUserRegMW, async (req, res) => {
   return res.status(200).send("OK");
   // return res.send(_.pick(user, ["email", "name"]));
 });
+router.post("/login/social", async (req, res) => {
+  let newuser = await User.findOne({ socialId: req.body.socialId });
+  if (newuser != null) return res.status(200).send(newuser._id);
+  newuser = new User();
+  newuser.fname = req.body.socialName;
+  // newuser.lname = req.body.lname;
+  newuser.email = req.body.socialEmail;
+  newuser.socialId = req.body.socialId;
+  newuser.socialType = req.body.socialType;
+  // let salt = await bcrypt.genSalt(10);
+  // newuser.password = await bcrypt.hash(newuser.password, salt);
+  await newuser.save();
+  return res.status(200).send(newuser._id);
+  // return res.send(_.pick(user, ["email", "name"]));
+});
 
 //sends all users to show on a table
 //@ users/allusers
@@ -133,8 +148,8 @@ async function sendMail(r_email, r_newpassword) {
     from: "trakouts@gmail.com", // sender address
     to: "arqam.android@gmail.com", // list of receivers
     subject: "Hello This is a TEST for password recovery✔", // Subject line
-    text: `Hello ${r_email}, Your new trakouts passoword is ${r_newpassword}`, // plain text body
-    html: `<b>Hello ${r_email}, Your new trakouts passoword is ${r_newpassword}</b>`, // html body
+    text: `Hello ${r_email}, Your new trakouts password is ${r_newpassword}`, // plain text body
+    html: `<b>Hello ${r_email}, Your new trakouts password is ${r_newpassword}</b>`, // html body
   });
 
   console.log("Message sent: %s", info.messageId);

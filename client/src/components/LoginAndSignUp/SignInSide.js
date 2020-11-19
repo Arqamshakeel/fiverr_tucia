@@ -20,9 +20,11 @@ import SnackBar from "../snackBar/SnackBar";
 import { useSelector, useDispatch } from "react-redux";
 // import CheckLogIn from "../../auth/CheckLogIn";
 import { trueLogin } from "../../Redux/actions/LoginAction";
+import { trueLoginGoogle } from "../../Redux/actions/GoogleLoginAction";
 // import SnackBar from "../snackBar/SnackBar";
 import RedirectToHome from "../../auth/RedirectToHome";
-
+import GoogleLogin from "react-google-login";
+import ReactFacebookLogin from "react-facebook-login";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -76,6 +78,7 @@ const SignInSide = (props) => {
   const [open, setOpen] = React.useState(false);
   const [msg, setmsg] = React.useState("");
   const [loginProgress, setLoginProgress] = React.useState(false);
+  const [img, setImg] = React.useState("");
 
   const classes = useStyles();
   const [email, setEmail] = React.useState("");
@@ -86,6 +89,7 @@ const SignInSide = (props) => {
   const [sucessOpen, setSucessOpen] = React.useState(false);
 
   const [sucessMsg, setSucessMsg] = React.useState("");
+  console.log(useSelector((state) => state.login.email));
   const handleLogin = () => {
     setLoginProgress(true);
     userService
@@ -109,6 +113,77 @@ const SignInSide = (props) => {
       });
   };
 
+  const handleGoogleLogin = (r) => {
+    console.log("====================================");
+    console.log(r.profileObj);
+
+    // dispatch(
+    //   trueLoginGoogle({
+    //     name: r.profileObj.name,
+    //     email: r.profileObj.email,
+    //     imageurl: r.profileObj.imageurl,
+    //   })
+    // );
+    var temp = {};
+    userService
+      .UserSocialLogin({
+        socialName: r.profileObj.name,
+        socialEmail: r.profileObj.email,
+        socialId: r.profileObj.googleId,
+        socialType: "Google",
+      })
+      .then((res) => {
+        console.log("====================================");
+        console.log(r);
+        temp = r.profileObj;
+        var temp2 = { _id: res };
+        // temp.push({ _id: r });
+        temp._id = res;
+        // var temp3 =   temp2 + tekmp;
+        localStorage.setItem("google", JSON.stringify(temp));
+        dispatch(trueLogin());
+        props.history.push("/");
+        console.log("====================================");
+      })
+      .catch((e) => {
+        console.log("====================================");
+        console.log(e);
+        console.log("====================================");
+      });
+  };
+  const handleErrorGoogleLogin = (r) => {
+    console.log("====================================");
+    console.log(r);
+    console.log("====================================");
+  };
+
+  const handleFacebookLogin = (r) => {
+    var temp = {};
+    userService
+      .UserSocialLogin({
+        socialName: r.name,
+        socialEmail: r.email,
+        socialId: r.id,
+        socialType: "Facebook",
+      })
+      .then((res) => {
+        console.log("====================================");
+        console.log(r);
+        temp = r;
+        var temp2 = { _id: res };
+        temp._id = res;
+        localStorage.setItem("facebook", JSON.stringify(temp));
+        dispatch(trueLogin());
+        props.history.push("/");
+        console.log("====================================");
+      })
+      .catch((e) => {
+        console.log("====================================");
+        console.log(e);
+        console.log("====================================");
+      });
+  };
+
   return (
     <RedirectToHome>
       <Grid container component="main" className={classes.root}>
@@ -120,9 +195,48 @@ const SignInSide = (props) => {
             <Avatar className={classes.avatar}>
               <LockOutlinedIcon />
             </Avatar>
+            <Grid container justify="center">
+              <Grid item xs={2}></Grid>
+              <Grid item xs={4}>
+                <Box display="flex" justifyContent="center" alignItems="center">
+                  <GoogleLogin
+                    clientId="979963542445-pc65c77tmrn68f5m5iivgktli9ccq3m4.apps.googleusercontent.com"
+                    buttonText="Login"
+                    onSuccess={handleGoogleLogin}
+                    onFailure={handleErrorGoogleLogin}
+                    cookiePolicy={"single_host_origin"}
+                    theme="dark"
+                  />
+                </Box>
+              </Grid>
+
+              <Grid item xs={4}>
+                <Box display="flex" justifyContent="center" alignItems="center">
+                  <ReactFacebookLogin
+                    appId="685422652363605"
+                    // autoLoad={true}
+                    fields="name,email,picture"
+                    onClick={(r) => {
+                      console.log(r);
+                    }}
+                    callback={handleFacebookLogin}
+                    // cssClass="[1]"
+                    icon="fa-facebook"
+                    size="small"
+                    textButton="Login"
+                    // isMobile={true}
+                  />
+                </Box>
+              </Grid>
+              <Grid item xs={2}></Grid>
+            </Grid>
+            {/* <Typography component="h1" variant="h5">
+              or
+            </Typography> */}
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
+            <img src={img} alt="" />
             <form className={classes.form}>
               <TextField
                 value={email}

@@ -240,6 +240,7 @@ function CustomHeader(props) {
   const isMenuOpen = Boolean(anchorEl);
   const [searchTextField, setSearchTextField] = React.useState("");
   const [top100Films, setTop100Films] = React.useState([]);
+  const [avatarImage, setAvatarImage] = React.useState("");
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   // const [showToolBar, setShowToolBar] = React.useState(() => {
   //   return props.history.location.pathname == "/" && isLoggedInRedux;
@@ -266,6 +267,24 @@ function CustomHeader(props) {
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       props.history.push("/search/" + searchTextField);
+    }
+  };
+
+  const handleAvatarImage = () => {
+    if (userService.getloggedinuser()) {
+      if (userService.getloggedinuser().imageUrl) {
+        console.log("====================================");
+        console.log("IN GOOGLE IMAGE");
+        console.log("====================================");
+        setAvatarImage(userService.getloggedinuser().imageUrl);
+      } else if (userService.getloggedinuser().picture.data.url) {
+        setAvatarImage(userService.getloggedinuser().picture.data.url);
+      } else {
+        console.log("====================================");
+        console.log("IN NULL IMAGE");
+        console.log("====================================");
+        return null;
+      }
     }
   };
   // const buttonClick = () => {
@@ -652,7 +671,11 @@ function CustomHeader(props) {
               {isLoggedInRedux ? (
                 <Tooltip title={userService.getloggedinuser().name}>
                   <span style={{ margin: "auto", marginLeft: "10px" }}>
-                    <Avatar aria-label="recipe" className={classes.avatar}>
+                    <Avatar
+                      aria-label="recipe"
+                      className={classes.avatar}
+                      src={handleAvatarImage}
+                    >
                       {userService.getloggedinuser().name
                         ? userService.getloggedinuser().name[0].toUpperCase()
                         : null}
@@ -838,7 +861,23 @@ function CustomHeader(props) {
               {isLoggedInRedux ? (
                 <Tooltip title={userService.getloggedinuser().name}>
                   <span style={{ margin: "auto", marginLeft: "10px" }}>
-                    <Avatar aria-label="recipe" className={classes.avatar}>
+                    <Avatar
+                      aria-label="recipe"
+                      className={classes.avatar}
+                      src={
+                        userService.getloggedinuser().imageUrl
+                          ? userService.getloggedinuser().imageUrl
+                          : userService.getloggedinuser().picture
+                          ? userService.getloggedinuser().picture.data.url
+                          : null
+                      }
+
+                      // src={
+                      //   userService.getloggedinuser().imageUrl
+                      //     ? userService.getloggedinuser().imageUrl
+                      //     : null
+                      // }
+                    >
                       {userService.getloggedinuser().name
                         ? userService.getloggedinuser().name[0].toUpperCase()
                         : null}

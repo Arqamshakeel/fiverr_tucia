@@ -19,7 +19,11 @@ class UserService extends GenericService {
     });
 
   isLoggedin = () => {
-    if (localStorage.getItem("token")) {
+    if (
+      localStorage.getItem("token") ||
+      localStorage.getItem("google") ||
+      localStorage.getItem("facebook")
+    ) {
       return true;
     } else {
       return false;
@@ -28,17 +32,34 @@ class UserService extends GenericService {
   logout = () => {
     if (localStorage.getItem("token")) {
       localStorage.removeItem("token");
+
       return true;
+    } else if (localStorage.getItem("google")) {
+      localStorage.removeItem("google");
+    } else if (localStorage.getItem("facebook")) {
+      localStorage.removeItem("facebook");
     } else {
       return false;
     }
   };
   getloggedinuser = () => {
     try {
-      const jwt = localStorage.getItem("token");
-      // console.log("getLoggedinData");
-      // console.log(jwtDecode(jwt));
-      return jwtDecode(jwt);
+      if (localStorage.getItem("token")) {
+        const jwt = localStorage.getItem("token");
+        // console.log("getLoggedinData");
+        // console.log(jwtDecode(jwt));
+        return jwtDecode(jwt);
+      } else if (localStorage.getItem("google")) {
+        const g = localStorage.getItem("google");
+        var test = JSON.parse(g);
+        return test;
+      } else if (localStorage.getItem("facebook")) {
+        const g = localStorage.getItem("facebook");
+        var test = JSON.parse(g);
+        return test;
+      } else {
+        return null;
+      }
     } catch (ex) {
       return null;
     }
@@ -54,11 +75,21 @@ class UserService extends GenericService {
     return false;
   };
   loggedInId = () => {
-    return this.getloggedinuser()._id;
+    if (localStorage.getItem("token")) {
+      return this.getloggedinuser()._id;
+    } else if (localStorage.getItem("google")) {
+      const g = localStorage.getItem("google");
+      var test = JSON.parse(g);
+      return test.googleId;
+    } else if (localStorage.getItem("facebook")) {
+      const g = localStorage.getItem("facebook");
+      var test = JSON.parse(g);
+      return test.id;
+    }
   };
 
   UserReg = (data) => this.post("users/register", data);
-
+  UserSocialLogin = (data) => this.post("users/login/social", data);
   getUserOrders = (id) => this.get("storage/allorder/user/" + id);
   getAllUsers = () => this.get("users/allusers");
   updateUser = (data) => this.post("users/update", data);
