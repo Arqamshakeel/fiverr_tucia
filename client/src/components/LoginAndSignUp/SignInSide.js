@@ -195,41 +195,7 @@ const SignInSide = (props) => {
             <Avatar className={classes.avatar}>
               <LockOutlinedIcon />
             </Avatar>
-            <Grid container justify="center">
-              <Grid item xs={2}></Grid>
-              <Grid item xs={4}>
-                <Box display="flex" justifyContent="center" alignItems="center">
-                  <GoogleLogin
-                    clientId="979963542445-pc65c77tmrn68f5m5iivgktli9ccq3m4.apps.googleusercontent.com"
-                    buttonText="Login"
-                    onSuccess={handleGoogleLogin}
-                    onFailure={handleErrorGoogleLogin}
-                    cookiePolicy={"single_host_origin"}
-                    theme="dark"
-                  />
-                </Box>
-              </Grid>
 
-              <Grid item xs={4}>
-                <Box display="flex" justifyContent="center" alignItems="center">
-                  <ReactFacebookLogin
-                    appId="685422652363605"
-                    // autoLoad={true}
-                    fields="name,email,picture"
-                    onClick={(r) => {
-                      console.log(r);
-                    }}
-                    callback={handleFacebookLogin}
-                    // cssClass="[1]"
-                    icon="fa-facebook"
-                    size="small"
-                    textButton="Login"
-                    // isMobile={true}
-                  />
-                </Box>
-              </Grid>
-              <Grid item xs={2}></Grid>
-            </Grid>
             {/* <Typography component="h1" variant="h5">
               or
             </Typography> */}
@@ -285,8 +251,59 @@ const SignInSide = (props) => {
               >
                 Sign In
               </Button>
+              <Grid container justify="center">
+                <Grid item xs={2}></Grid>
+                <Grid item xs={12}>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <GoogleLogin
+                      clientId="979963542445-pc65c77tmrn68f5m5iivgktli9ccq3m4.apps.googleusercontent.com"
+                      buttonText="Login"
+                      onSuccess={handleGoogleLogin}
+                      onFailure={handleErrorGoogleLogin}
+                      cookiePolicy={"single_host_origin"}
+                      theme="dark"
+                    />
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <Typography>or</Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <ReactFacebookLogin
+                      appId="685422652363605"
+                      // autoLoad={true}
+                      fields="name,email,picture"
+                      onClick={(r) => {
+                        console.log(r);
+                      }}
+                      callback={handleFacebookLogin}
+                      // cssClass="[1]"
+                      icon="fa-facebook"
+                      size="small"
+                      textButton="Login"
+                      // isMobile={true}
+                    />
+                  </Box>
+                </Grid>
+              </Grid>
               {/* <CircularProgress color="secondary" />; */}
               <CustomBackdrop open={loginProgress} setOpen={setLoginProgress} />
+              <br />
               <Grid container>
                 <Grid item xs>
                   {/* <Link href="#" variant="body2">

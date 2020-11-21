@@ -15,6 +15,8 @@ import Slide from "@material-ui/core/Slide";
 import { Box, Grid, Paper, TextField } from "@material-ui/core";
 import DialgueAddTopic from "./componentsForFaqAddMenu/DialgueAddTopic";
 import FAQtopicList from "./componentsForFaqAddMenu/FAQtopicList";
+import TextEditor from "./componentsForFaqAddMenu/TextEditor";
+import QuirlText from "./componentsForFaqAddMenu/QuirlText";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -92,6 +94,12 @@ export default function AddFAQ({ open: open, setOpen: setOpen }) {
                 variant="outlined"
               />
             </Box>
+          </Grid>
+          <Grid item xs={11}>
+            {/* <Box display="flex" justifyContent="center" alignItems="center"> */}
+            <TextEditor />
+            <QuirlText />
+            {/* </Box> */}
           </Grid>
         </Grid>
       </Dialog>
