@@ -43,6 +43,8 @@ const ForgotPasswordTemplate = (props) => {
   const [pass, setPass] = React.useState("");
   React.useEffect(() => {
     console.log("====================================");
+
+    console.log("HERE ARE THE THINGS");
     console.log(props.match.params.id);
     console.log(props.match.params.key);
     console.log("====================================");
@@ -60,6 +62,30 @@ const ForgotPasswordTemplate = (props) => {
         console.log("====================================");
       });
   }, []);
-  return <div>{pass} HElloooooooooooo</div>;
+  return (
+    <div>
+      <div>{pass} HElloooooooooooo</div>
+      <div>{pass} HElloooooooooooo</div>
+      <div>{pass} HElloooooooooooo</div>
+      <div>{pass} HElloooooooooooo</div>
+      <div>{pass} HElloooooooooooo</div>
+      <div>{pass} HElloooooooooooo</div>
+      <div>
+        {pass}{" "}
+        HEllooooooooooofffffffffffffffffffffffffffffffffffffffffffffffffffffffo
+      </div>
+      <div>{pass} HElloooooooooooo</div>
+      <div>{pass} HElloooooooooooo</div>
+      <div>{pass} HElloooooooooooo</div>
+      <div>{pass} HElloooooooooooo</div>
+      <div>{pass} HElloooooooooooo</div>
+      <div>{pass} HElloooooooooooo</div>
+      <div>{pass} HElloooooooooooo</div>
+      <div>{pass} HElloooooooooooo</div>
+      <div>{pass} HElloooooooooooo</div>
+      <div>{pass} HElloooooooooooo</div>
+      <div>{pass} HElloooooooooooo</div>
+    </div>
+  );
 };
 export default ForgotPasswordTemplate;
