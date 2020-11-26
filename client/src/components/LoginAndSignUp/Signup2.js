@@ -6,12 +6,16 @@ import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
+import { useSelector, useDispatch } from "react-redux";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
+import GoogleLogin from "react-google-login";
+import ReactFacebookLogin from "react-facebook-login";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import { trueLogin } from "../../Redux/actions/LoginAction";
 import SuccessSnackBar from "../snackBar/SuccessSnackBar";
 // import userService from "../../services/UserService";
 import CustomBackdrop from "../backdrop/CustomBackdrop";
@@ -83,6 +87,7 @@ const Signup2 = (props) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [sucessOpen, setSucessOpen] = React.useState(false);
+  const dispatch = useDispatch();
 
   const [sucessMsg, setSucessMsg] = React.useState("");
   const handleLogin = () => {
@@ -97,8 +102,14 @@ const Signup2 = (props) => {
       .then(function (res) {
         setSucessOpen(true);
         setSucessMsg("Account successfully created");
-        props.history.push("/signin");
+        localStorage.setItem("token", res.token);
+        props.history.push("/");
         setLoginProgress(false);
+      })
+      .then(() => {
+        userService.isLoggedin()
+          ? dispatch(trueLogin())
+          : console.log("Not logged in");
       })
       .catch(function (error) {
         setLoginProgress(false);
@@ -107,6 +118,70 @@ const Signup2 = (props) => {
         //   setmsg(error.response.data);
         // }
       });
+  };
+  const handleGoogleLogin = (r) => {
+    // console.log("====================================");
+    console.log(r.profileObj);
+
+    // dispatch(
+    //   trueLoginGoogle({
+    //     name: r.profileObj.name,
+    //     email: r.profileObj.email,
+    //     imageurl: r.profileObj.imageurl,
+    //   })
+    // );
+    var temp = {};
+    userService
+      .UserSocialLogin({
+        socialName: r.profileObj.name,
+        socialEmail: r.profileObj.email,
+        socialId: r.profileObj.googleId,
+        socialType: "Google",
+      })
+      .then((res) => {
+        // console.log("====================================");
+        console.log(r);
+        temp = r.profileObj;
+        var temp2 = { _id: res };
+        // temp.push({ _id: r });
+        temp._id = res;
+        // var temp3 =   temp2 + tekmp;
+        localStorage.setItem("google", JSON.stringify(temp));
+        dispatch(trueLogin());
+        props.history.push("/");
+        // console.log("====================================");
+      })
+      .catch((e) => {
+        // console.log("====================================");
+        console.log(e);
+        // console.log("====================================");
+      });
+  };
+  const handleErrorGoogleLogin = (r) => {
+    // console.log("====================================");
+    console.log(r);
+    // console.log("====================================");
+  };
+
+  const handleFacebookLogin = (r) => {
+    var temp = {};
+    userService
+      .UserSocialLogin({
+        socialName: r.name,
+        socialEmail: r.email,
+        socialId: r.id,
+        socialType: "Facebook",
+      })
+      .then((res) => {
+        console.log(r);
+        temp = r;
+        var temp2 = { _id: res };
+        temp._id = res;
+        localStorage.setItem("facebook", JSON.stringify(temp));
+        dispatch(trueLogin());
+        props.history.push("/");
+      })
+      .catch((e) => {});
   };
   return (
     <RedirectToHome>
@@ -214,6 +289,57 @@ const Signup2 = (props) => {
                   >
                     Already have an account? Sign in
                   </Link>
+                </Grid>
+              </Grid>
+              <hr />
+              <Grid container justify="center">
+                <Grid item xs={2}></Grid>
+                <Grid item xs={12}>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <GoogleLogin
+                      clientId="979963542445-pc65c77tmrn68f5m5iivgktli9ccq3m4.apps.googleusercontent.com"
+                      buttonText="Login"
+                      onSuccess={handleGoogleLogin}
+                      onFailure={handleErrorGoogleLogin}
+                      cookiePolicy={"single_host_origin"}
+                      theme="dark"
+                    />
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <Typography>or</Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <ReactFacebookLogin
+                      appId="685422652363605"
+                      // autoLoad={true}
+                      fields="name,email,picture"
+                      onClick={(r) => {
+                        console.log(r);
+                      }}
+                      callback={handleFacebookLogin}
+                      // cssClass="[1]"
+                      icon="fa-facebook"
+                      size="small"
+                      textButton="Login"
+                      // isMobile={true}
+                    />
+                  </Box>
                 </Grid>
               </Grid>
               <Box mt={5}>

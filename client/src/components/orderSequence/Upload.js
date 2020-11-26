@@ -112,7 +112,7 @@ const Upload = (props) => {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Typography>
-            you have selected{" "}
+            You have selected{" "}
             {selectedPricing === 1
               ? "Audio Mastering Package ($30 USD). You can select only 1 file."
               : null}{" "}

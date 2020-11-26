@@ -49,7 +49,7 @@ const FAQ = (props) => {
             >
               Advice and answers from the Trakouts Team
             </Typography>
-            <Button
+            {/* <Button
               variant="contained"
               color="primary"
               onClick={() => {
@@ -57,7 +57,7 @@ const FAQ = (props) => {
               }}
             >
               Admin Panel
-            </Button>
+            </Button> */}
           </Grid>
         </Grid>
       </div>

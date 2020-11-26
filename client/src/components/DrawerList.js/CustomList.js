@@ -20,6 +20,7 @@ import userService from "../../services/UserService";
 import { useDispatch, useSelector } from "react-redux";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { falseLogin } from "../../Redux/actions/LoginAction";
+import { Box, Button, TextField } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,86 +52,105 @@ const CustomList = (props) => {
   };
   const dispatch = useDispatch();
   return (
-    <List
-      component="nav"
-      aria-labelledby="nested-list-subheader"
-      subheader={
-        <ListSubheader component="div" id="nested-list-subheader">
-          Trakouts
-        </ListSubheader>
-      }
-      className={classes.root}
-    >
-      <List component="div" disablePadding>
-        <ListItem
-          button
-          className={classes.nested}
-          onClick={() => {
-            props.history.push("/");
-            if (isTabletOrMobileDevice) props.handleDrawerToggle();
-          }}
-        >
-          <ListItemIcon>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText primary="Home" />
-        </ListItem>
-      </List>
-      {userService.isLoggedin() ? (
+    <>
+      <div>
+        <Box display="flex" justifyContent="center" alignItems="center">
+          <Button
+            startIcon={<SendIcon />}
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              props.history.push("/pricing");
+              if (isTabletOrMobileDevice) props.handleDrawerToggle();
+            }}
+            // inputStyle={{ color: "white", padding: "0 25px" }}
+            style={{ borderRadius: 25, marginBottom: "10px" }}
+          >
+            Place order
+          </Button>
+        </Box>
+      </div>
+      <List
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+        subheader={
+          <ListSubheader component="div" id="nested-list-subheader">
+            Trakouts
+          </ListSubheader>
+        }
+        className={classes.root}
+      >
         <List component="div" disablePadding>
           <ListItem
             button
             className={classes.nested}
             onClick={() => {
-              userService.logout();
-              dispatch(falseLogin());
+              props.history.push("/");
               if (isTabletOrMobileDevice) props.handleDrawerToggle();
             }}
           >
             <ListItemIcon>
-              <ExitToAppIcon />
+              <HomeIcon />
             </ListItemIcon>
-            <ListItemText primary={"Sign out"} />
+            <ListItemText primary="Home" />
           </ListItem>
         </List>
-      ) : (
-        <List component="div" disablePadding>
-          <ListItem
-            button
-            className={classes.nested}
-            onClick={() => {
-              props.history.push("/signin");
-              if (isTabletOrMobileDevice) props.handleDrawerToggle();
-            }}
-          >
-            <ListItemIcon>
-              <AccountCircleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Sign in" />
-          </ListItem>
-        </List>
-      )}
+        {userService.isLoggedin() ? (
+          // <List component="div" disablePadding>
+          //   <ListItem
+          //     button
+          //     className={classes.nested}
+          //     onClick={() => {
+          //       userService.logout();
+          //       dispatch(falseLogin());
+          //       if (isTabletOrMobileDevice) props.handleDrawerToggle();
+          //     }}
+          //   >
+          //     <ListItemIcon>
+          //       <ExitToAppIcon />
+          //     </ListItemIcon>
+          //     <ListItemText primary={"Sign out"} />
+          //   </ListItem>
+          // </List>
+          <></>
+        ) : (
+          <List component="div" disablePadding>
+            <ListItem
+              button
+              className={classes.nested}
+              onClick={() => {
+                props.history.push("/signin");
+                if (isTabletOrMobileDevice) props.handleDrawerToggle();
+              }}
+            >
+              <ListItemIcon>
+                <AccountCircleIcon />
+              </ListItemIcon>
+              <ListItemText primary="Sign in" />
+            </ListItem>
+          </List>
+        )}
 
-      {!userService.isLoggedin() ? (
-        <List
-          component="div"
-          disablePadding
-          onClick={() => {
-            props.history.push("/signup");
-            if (isTabletOrMobileDevice) props.handleDrawerToggle();
-          }}
-        >
-          <ListItem button className={classes.nested}>
-            <ListItemIcon>
-              <PersonAddIcon />
-            </ListItemIcon>
-            <ListItemText primary="Register" />
-          </ListItem>
-        </List>
-      ) : (
-        <></>
-      )}
-      <List component="div" disablePadding>
+        {!userService.isLoggedin() ? (
+          <List
+            component="div"
+            disablePadding
+            onClick={() => {
+              props.history.push("/signup");
+              if (isTabletOrMobileDevice) props.handleDrawerToggle();
+            }}
+          >
+            <ListItem button className={classes.nested}>
+              <ListItemIcon>
+                <PersonAddIcon />
+              </ListItemIcon>
+              <ListItemText primary="Register" />
+            </ListItem>
+          </List>
+        ) : (
+          <></>
+        )}
+        {/* <List component="div" disablePadding>
         <ListItem
           button
           className={classes.nested}
@@ -144,77 +164,77 @@ const CustomList = (props) => {
           </ListItemIcon>
           <ListItemText primary="Pricing" />
         </ListItem>
-      </List>
+      </List> */}
 
-      <List component="div" disablePadding>
-        <ListItem
-          button
-          className={classes.nested}
-          onClick={() => {
-            props.history.push("/pricing");
-            if (isTabletOrMobileDevice) props.handleDrawerToggle();
-          }}
-        >
-          <ListItemIcon>
-            <SendIcon />
-          </ListItemIcon>
-          <ListItemText primary="Place order" />
-        </ListItem>
-      </List>
-      {isLoggedInRedux ? (
         <List component="div" disablePadding>
           <ListItem
             button
             className={classes.nested}
             onClick={() => {
-              props.history.push("/userdashboard");
+              props.history.push("/pricing");
               if (isTabletOrMobileDevice) props.handleDrawerToggle();
             }}
           >
             <ListItemIcon>
-              <DashboardIcon />
+              <SendIcon />
             </ListItemIcon>
-            <ListItemText primary="User Dashboard" />
+            <ListItemText primary="Place order" />
           </ListItem>
         </List>
-      ) : (
-        <></>
-      )}
-      {isLoggedInRedux && userService.isAdmin() ? (
+        {isLoggedInRedux ? (
+          <List component="div" disablePadding>
+            <ListItem
+              button
+              className={classes.nested}
+              onClick={() => {
+                props.history.push("/userdashboard");
+                if (isTabletOrMobileDevice) props.handleDrawerToggle();
+              }}
+            >
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="User Dashboard" />
+            </ListItem>
+          </List>
+        ) : (
+          <></>
+        )}
+        {isLoggedInRedux && userService.isAdmin() ? (
+          <List component="div" disablePadding>
+            <ListItem
+              button
+              className={classes.nested}
+              onClick={() => {
+                props.history.push("/admindashboard");
+                if (isTabletOrMobileDevice) props.handleDrawerToggle();
+              }}
+            >
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Admin Dashboard" />
+            </ListItem>
+          </List>
+        ) : (
+          <></>
+        )}
         <List component="div" disablePadding>
           <ListItem
             button
             className={classes.nested}
             onClick={() => {
-              props.history.push("/admindashboard");
+              props.history.push("/faq");
               if (isTabletOrMobileDevice) props.handleDrawerToggle();
             }}
           >
             <ListItemIcon>
-              <DashboardIcon />
+              <ContactSupportIcon />
             </ListItemIcon>
-            <ListItemText primary="Admin Dashboard" />
+            <ListItemText primary="FAQ" />
           </ListItem>
         </List>
-      ) : (
-        <></>
-      )}
-      <List component="div" disablePadding>
-        <ListItem
-          button
-          className={classes.nested}
-          onClick={() => {
-            props.history.push("/faq");
-            if (isTabletOrMobileDevice) props.handleDrawerToggle();
-          }}
-        >
-          <ListItemIcon>
-            <ContactSupportIcon />
-          </ListItemIcon>
-          <ListItemText primary="FAQ" />
-        </ListItem>
-      </List>
-      {/* <List component="div" disablePadding>
+        {/* <List component="div" disablePadding>
           <ListItem
             button
             className={classes.nested}
@@ -230,7 +250,7 @@ const CustomList = (props) => {
           </ListItem>
         </List> */}
 
-      {/* <List
+        {/* <List
           component="div"
           disablePadding
           onClick={() => {
@@ -245,7 +265,8 @@ const CustomList = (props) => {
             <ListItemText primary="Delete" />
           </ListItem>
         </List> */}
-    </List>
+      </List>
+    </>
   );
 };
 export default withRouter(CustomList);

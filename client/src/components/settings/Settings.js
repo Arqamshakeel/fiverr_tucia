@@ -114,36 +114,55 @@ export default function Settings(props) {
         console.log(err);
       });
   };
+  function ValidateEmail(mail) {
+    if (
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+        mail
+      )
+    ) {
+      return true;
+    }
+    // alert("You have entered an invalid email address!");
+    return false;
+  }
 
   const updateUserDetails = () => {
-    if (newPassword === "") {
-      setOpen(true);
-      setmsg("New password must not be empty");
-    } else {
-      setLoginProgress(true);
-      userService
-        .updateUserDetails(userService.getloggedinuser()._id, {
-          fname: fname,
-          lname: lname,
-          password: password,
-          newPassword: newPassword,
-          email: email,
-        })
-        .then((res) => {
-          setLoginProgress(false);
-          setSucessOpen(true);
-          setSucessMsg("Password successfully changed!");
+    if (password.length > 0) {
+      if (newPassword === "") {
+        setOpen(true);
+        setmsg("New password must not be empty");
+      }
+    }
+    if (ValidateEmail(email)) {
+      {
+        setLoginProgress(true);
+        userService
+          .updateUserDetails(userService.getloggedinuser()._id, {
+            fname: fname,
+            lname: lname,
+            password: password,
+            newPassword: newPassword,
+            email: email,
+          })
+          .then((res) => {
+            setLoginProgress(false);
+            setSucessOpen(true);
+            setSucessMsg("Information updated");
 
-          setNewPassword("");
-          setPassword("");
-        })
-        .catch((err) => {
-          setLoginProgress(false);
-          setOpen(true);
-          if (err.response) {
-            setmsg(err.response.data);
-          }
-        });
+            setNewPassword("");
+            setPassword("");
+          })
+          .catch((err) => {
+            setLoginProgress(false);
+            setOpen(true);
+            if (err.response) {
+              setmsg(err.response.data);
+            }
+          });
+      }
+    } else {
+      setOpen(true);
+      setmsg("Email is not valid");
     }
   };
   React.useEffect(getDataOnLoad, []);
@@ -163,6 +182,14 @@ export default function Settings(props) {
         <Typography component="h1" variant="h5">
           Update Settings
         </Typography>
+        {userService.getloggedinuser() ? (
+          userService.getloggedinuser().socialType != "no" ? (
+            <Typography component="h6" variant="h7">
+              You are logged in by social credentials, you cannot update
+              settings.
+            </Typography>
+          ) : null
+        ) : null}
         <form className={classes.form} noValidate>
           {/* <SnackBar open={open} setOpen={setOpen} msg={msg} /> */}
           <Grid container spacing={2}>
@@ -173,6 +200,13 @@ export default function Settings(props) {
                 variant="outlined"
                 required
                 fullWidth
+                disabled={
+                  userService.getloggedinuser()
+                    ? userService.getloggedinuser().socialType != "no"
+                      ? true
+                      : false
+                    : false
+                }
                 label="First Name"
                 value={fname}
                 onChange={(e) => {
@@ -184,6 +218,13 @@ export default function Settings(props) {
             <Grid item xs={12} sm={6}>
               <TextField
                 variant="outlined"
+                disabled={
+                  userService.getloggedinuser()
+                    ? userService.getloggedinuser().socialType != "no"
+                      ? true
+                      : false
+                    : false
+                }
                 required
                 fullWidth
                 label="Last Name"
@@ -199,8 +240,15 @@ export default function Settings(props) {
               <TextField
                 variant="outlined"
                 required
-                disabled={true}
+                // disabled={true}
                 fullWidth
+                disabled={
+                  userService.getloggedinuser()
+                    ? userService.getloggedinuser().socialType != "no"
+                      ? true
+                      : false
+                    : false
+                }
                 label="Email Address"
                 name="email"
                 value={email}
@@ -215,6 +263,13 @@ export default function Settings(props) {
                 variant="outlined"
                 required
                 fullWidth
+                disabled={
+                  userService.getloggedinuser()
+                    ? userService.getloggedinuser().socialType != "no"
+                      ? true
+                      : false
+                    : false
+                }
                 name="password"
                 label="Old Password"
                 type="password"
@@ -228,6 +283,13 @@ export default function Settings(props) {
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
+                disabled={
+                  userService.getloggedinuser()
+                    ? userService.getloggedinuser().socialType != "no"
+                      ? true
+                      : false
+                    : false
+                }
                 required
                 fullWidth
                 name="password"
@@ -239,14 +301,21 @@ export default function Settings(props) {
                 }}
               />
             </Grid>
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <Button onClick={forgetPasswordBtn}>Forget pasword</Button>
-            </Grid>
+            </Grid> */}
           </Grid>
           <Button
             fullWidth
             variant="contained"
             color="primary"
+            disabled={
+              userService.getloggedinuser()
+                ? userService.getloggedinuser().socialType != "no"
+                  ? true
+                  : false
+                : false
+            }
             className={classes.submit}
             onClick={updateUserDetails}
           >

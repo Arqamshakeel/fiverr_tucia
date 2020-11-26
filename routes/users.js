@@ -27,8 +27,45 @@ router.post("/register", validateUserRegMW, async (req, res) => {
   let salt = await bcrypt.genSalt(10);
   newuser.password = await bcrypt.hash(newuser.password, salt);
   await newuser.save();
-  return res.status(200).send("OK");
+  let token = jwt.sign(
+    {
+      _id: newuser._id,
+      name: newuser.fname,
+      role: newuser.role,
+      email: newuser.email,
+      socialType: newuser.socialType,
+    },
+    config.get("jwt")
+  );
+
+  let user2 = jwt.verify(token, config.get("jwt"));
+  return res.send({ ok: "login successfull", token, user2 });
   // return res.send(_.pick(user, ["email", "name"]));
+});
+router.post("/login", validateUserLoginMW, async (req, res) => {
+  let userData = await User.findOne({
+    email: req.body.email,
+    socialType: "no",
+  });
+  if (!userData)
+    return res.status(400).send("Sorry, user with this email not found.");
+
+  let password = await bcrypt.compare(req.body.password, userData.password);
+  if (!password) return res.status(400).send("Wrong password");
+
+  let token = jwt.sign(
+    {
+      _id: userData._id,
+      name: userData.fname,
+      role: userData.role,
+      email: userData.email,
+      socialType: userData.socialType,
+    },
+    config.get("jwt")
+  );
+
+  let user2 = jwt.verify(token, config.get("jwt"));
+  return res.send({ ok: "login successfull", token, user2 });
 });
 router.post("/login/social", async (req, res) => {
   let newuser = await User.findOne({ socialId: req.body.socialId });
@@ -72,11 +109,21 @@ router.get("/details/:id", async (req, res) => {
 });
 //this route is to update user account details on the edit user details page
 //@ POST /users/details/id
-router.post("/details/:id", validateUserRegMW, async (req, res) => {
+router.post("/details/:id", async (req, res) => {
   let id = req.params.id;
-  if (req.body.password === req.body.newPassword) {
-    return res.status(400).send("Passwords should be different.");
-  } else if (req.body.newPassword.length < 5) {
+  if (req.body.password.length > 4) {
+    if (req.body.password === req.body.newPassword) {
+      return res.status(400).send("Passwords should be different.");
+    } else if (req.body.newPassword.length < 5) {
+      return res
+        .status(400)
+        .send("New password's length should be greater than 4.");
+    }
+  } else if (req.body.password.length > 1) {
+    return res
+      .status(400)
+      .send("New password's length should be greater than 4.");
+  } else if (req.body.password.length > 1) {
     return res
       .status(400)
       .send("New password's length should be greater than 4.");
@@ -84,41 +131,30 @@ router.post("/details/:id", validateUserRegMW, async (req, res) => {
 
   let user = await User.findById(id);
   if (!user) return res.status(400).send("Sorry, no user found!");
+  if (req.body.password.length > 4) {
+    let password = await bcrypt.compare(req.body.password, user.password);
+    if (!password) return res.status(400).send("Wrong old password");
 
-  let password = await bcrypt.compare(req.body.password, user.password);
-  if (!password) return res.status(400).send("Wrong old password");
-
-  let salt = await bcrypt.genSalt(10);
-  user.password = await bcrypt.hash(req.body.newPassword, salt);
+    let salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(req.body.newPassword, salt);
+  }
   user.fname = req.body.fname;
   user.lname = req.body.lname;
+  user.email = req.body.email;
   await user.save();
   return res.status(200).send("Password successfully changed!");
 });
 
-router.post("/login", validateUserLoginMW, async (req, res) => {
-  let userData = await User.findOne({
-    email: req.body.email,
-  });
-  if (!userData)
-    return res.status(400).send("Sorry, user with this email not found.");
-
-  let password = await bcrypt.compare(req.body.password, userData.password);
-  if (!password) return res.status(400).send("Wrong password");
-
-  let token = jwt.sign(
-    { _id: userData._id, name: userData.fname, role: userData.role },
-    config.get("jwt")
-  );
-
-  let user2 = jwt.verify(token, config.get("jwt"));
-  return res.send({ ok: "login successfull", token, user2 });
-});
-router.post("/forgetPassword/:id", async (req, res) => {
-  console.log(req.params.id);
-
-  let user = await User.findById(req.params.id);
-  if (!user) res.status(400).send("User does not exists!");
+router.post("/forgetPassword", async (req, res) => {
+  // console.log(req.params.id);
+  console.log(req.body.email + "hello");
+  let user = await User.findOne({ email: req.body.email, socialType: "no" });
+  if (!user)
+    return res.status(400).send("Sorry no account found with this email.");
+  console.log(user);
+  let id = user._id;
+  // let user = await User.findById(req.params.id);
+  // if (!user) res.status(400).send("User does not exists!");
 
   var password = generator.generate({
     length: 10,
@@ -131,9 +167,9 @@ router.post("/forgetPassword/:id", async (req, res) => {
   console.log(password);
 
   console.log(req.body.email);
-  await sendConfirmationMail(req.body.email, password, req.params.id);
+  await sendConfirmationMail(req.body.email, password, id);
   // await sendMail(req.body.email, password);
-  return res.send();
+  return res.status(200).send();
 });
 
 // confirmEmail/${id}/${key}

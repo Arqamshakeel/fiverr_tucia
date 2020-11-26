@@ -114,7 +114,7 @@ const SignInSide = (props) => {
   };
 
   const handleGoogleLogin = (r) => {
-    console.log("====================================");
+    // console.log("====================================");
     console.log(r.profileObj);
 
     // dispatch(
@@ -133,7 +133,7 @@ const SignInSide = (props) => {
         socialType: "Google",
       })
       .then((res) => {
-        console.log("====================================");
+        // console.log("====================================");
         console.log(r);
         temp = r.profileObj;
         var temp2 = { _id: res };
@@ -143,18 +143,18 @@ const SignInSide = (props) => {
         localStorage.setItem("google", JSON.stringify(temp));
         dispatch(trueLogin());
         props.history.push("/");
-        console.log("====================================");
+        // console.log("====================================");
       })
       .catch((e) => {
-        console.log("====================================");
+        // console.log("====================================");
         console.log(e);
-        console.log("====================================");
+        // console.log("====================================");
       });
   };
   const handleErrorGoogleLogin = (r) => {
-    console.log("====================================");
+    // console.log("====================================");
     console.log(r);
-    console.log("====================================");
+    // console.log("====================================");
   };
 
   const handleFacebookLogin = (r) => {
@@ -167,7 +167,6 @@ const SignInSide = (props) => {
         socialType: "Facebook",
       })
       .then((res) => {
-        console.log("====================================");
         console.log(r);
         temp = r;
         var temp2 = { _id: res };
@@ -175,13 +174,8 @@ const SignInSide = (props) => {
         localStorage.setItem("facebook", JSON.stringify(temp));
         dispatch(trueLogin());
         props.history.push("/");
-        console.log("====================================");
       })
-      .catch((e) => {
-        console.log("====================================");
-        console.log(e);
-        console.log("====================================");
-      });
+      .catch((e) => {});
   };
 
   return (
@@ -251,6 +245,53 @@ const SignInSide = (props) => {
               >
                 Sign In
               </Button>
+              <Grid container>
+                <Grid item xs>
+                  {/* <Link href="#" variant="body2">
+                  Forgot password?
+                </Link> */}
+                </Grid>
+                <Grid item xs={6}>
+                  <Link
+                    variant="body2"
+                    onClick={() => {
+                      props.history.push("/signup");
+                    }}
+                  >
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
+                <Grid item xs={6}>
+                  <Link
+                    style={{ float: "right" }}
+                    variant="body2"
+                    onClick={() => {
+                      props.history.push("/forgotpassword");
+                    }}
+                  >
+                    {"Forgot password? Recover"}
+                  </Link>
+                </Grid>
+              </Grid>
+              <Grid container>
+                <Grid item xs>
+                  {/* <Link href="#" variant="body2">
+                  Forgot password?
+                </Link> */}
+                </Grid>
+                {/* <Grid item>
+                  <Link
+                    variant="body2"
+                    onClick={() => {
+                      props.history.push("/forgotpassword");
+                    }}
+                  >
+                    {"Forgot password? Recover"}
+                  </Link>
+                </Grid> */}
+              </Grid>
+
+              <hr />
               <Grid container justify="center">
                 <Grid item xs={2}></Grid>
                 <Grid item xs={12}>
@@ -304,23 +345,7 @@ const SignInSide = (props) => {
               {/* <CircularProgress color="secondary" />; */}
               <CustomBackdrop open={loginProgress} setOpen={setLoginProgress} />
               <br />
-              <Grid container>
-                <Grid item xs>
-                  {/* <Link href="#" variant="body2">
-                  Forgot password?
-                </Link> */}
-                </Grid>
-                <Grid item>
-                  <Link
-                    variant="body2"
-                    onClick={() => {
-                      props.history.push("/signup");
-                    }}
-                  >
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
-              </Grid>
+
               <Box mt={5}>
                 <Copyright />
               </Box>

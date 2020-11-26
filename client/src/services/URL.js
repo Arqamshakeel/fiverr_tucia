@@ -8,9 +8,9 @@ export const trakoutsKEY = () => {
   return "Acsx2EqNJAIMmbDgdOzezE2yOZMdjoSAPSwrPTmCQfzUo6Qtibddhj-AKQmDy3ZGGhGDdboW4scq9oiQ";
 };
 
-// export const baseURL = () => {
-//   return "https://www.trakouts.com";
-// };
 export const baseURL = () => {
-  return "http://localhost:4000";
+  return "https://www.trakouts.com";
 };
+// export const baseURL = () => {
+//   return "http://localhost:4000";
+// };

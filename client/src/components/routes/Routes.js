@@ -20,6 +20,7 @@ import MediaCard from "../faq/MediaCard";
 import FAQ from "../faq/FAQ";
 import Questions from "../faq/Questions";
 import FaqAdminPanel from "../faq/FaqAdminPanel";
+import ForgotPassword from "../LoginAndSignUp/ForgotPassword";
 const Routes = () => {
   const isDesktopOrLaptop = useMediaQuery({
     query: "(min-device-width: 1224px)",
@@ -44,6 +45,7 @@ const Routes = () => {
         <Route path="/faq" exact component={FAQ} />
         <Route path="/questions/:id" exact component={Questions} />
         <Route path="/faqadminpanel" exact component={FaqAdminPanel} />
+        <Route path="/forgotpassword" exact component={ForgotPassword} />
       </Switch>
       <Footer />
       {isTabletOrMobileDevice ? (

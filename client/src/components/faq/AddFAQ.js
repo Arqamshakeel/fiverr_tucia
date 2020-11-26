@@ -114,9 +114,20 @@ export default function AddFAQ({ open: open, setOpen: setOpen }) {
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              Sound
+              Add FAQ
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
+            <Button
+              autoFocus
+              color="inherit"
+              onClick={handleClose}
+              disabled={
+                articleName.length < 1
+                  ? true
+                  : articleDesc.length < 1
+                  ? true
+                  : false
+              }
+            >
               save
             </Button>
           </Toolbar>

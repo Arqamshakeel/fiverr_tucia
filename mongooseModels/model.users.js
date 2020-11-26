@@ -8,7 +8,7 @@ var userSchema = mongoose.Schema({
   email: String,
   password: String,
   socialId: String,
-  socialType: String,
+  socialType: { type: String, default: "no" },
   role: { type: Boolean, default: false },
   forgetConfirmation: String,
 });

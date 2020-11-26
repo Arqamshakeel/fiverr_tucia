@@ -1,11 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
+import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import SendIcon from "@material-ui/icons/Send";
 import Drawer from "@material-ui/core/Drawer";
+import SettingsIcon from "@material-ui/icons/Settings";
 import Hidden from "@material-ui/core/Hidden";
+import HelpIcon from "@material-ui/icons/Help";
 import IconButton from "@material-ui/core/IconButton";
 //import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MessageIcon from "@material-ui/icons/Message";
@@ -27,7 +30,12 @@ import { useMediaQuery } from "react-responsive";
 
 import Typography from "@material-ui/core/Typography";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import { makeStyles, useTheme, fade } from "@material-ui/core/styles";
+import {
+  makeStyles,
+  useTheme,
+  fade,
+  withStyles,
+} from "@material-ui/core/styles";
 // import { Switch, Route } from "react-router-dom";
 // import Home from "../home/Home";
 //import CustomCarousel from "../Carousel/Carousel";
@@ -57,7 +65,7 @@ import BottomNav from "../Bottom navigation/BottomNav";
 //import Order from "../order/Order";
 // import OrderExpandable from "../order/OrderExpandable";
 
-import { Button, Avatar, InputAdornment } from "@material-ui/core";
+import { Button, Avatar, InputAdornment, Grid } from "@material-ui/core";
 // import userService from "../../services/UserService";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { switchLogin, falseLogin } from "../../Redux/actions/LoginAction";
@@ -84,6 +92,35 @@ import { baseURL } from "../../services/URL";
 // import ShowExpired from "../products/ShowExpired";
 // import CartScreen from "../cart/CartScreen";
 const socket = io.connect(baseURL());
+const StyledMenu = withStyles({
+  paper: {
+    border: "1px solid #d3d4d5",
+  },
+})((props) => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "center",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "center",
+    }}
+    {...props}
+  />
+));
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    "&:focus": {
+      backgroundColor: theme.palette.primary.main,
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+}))(MenuItem);
 // const socket = io.connect("https://familymart.gq");
 // axios.defaults.baseURL = "https://familymart.gq/api/";
 // const socket = io.connect(
@@ -99,120 +136,131 @@ const socket = io.connect(baseURL());
 //const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
 //const socket = io.connect("https://test-express-arqam.herokuapp.com:4001");
 
-const drawerWidth = 205;
+function CustomHeader(props) {
+  const isLoggedInRedux = useSelector((state) => state.login.isloggedin);
+  const widthChecker = () => {
+    if (isLoggedInRedux && props.history.location.pathname != "/order") {
+      return 205;
+    } else {
+      return 0;
+    }
+  };
+  const drawerWidth = widthChecker();
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    // display: "flex",
-  },
-  customizeToolbar: {
-    minHeight: 65,
-  },
-  drawer: {
-    [theme.breakpoints.up("sm")]: {
-      width: drawerWidth,
-      flexShrink: 0,
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      // display: "flex",
     },
-  },
-  title: {
-    display: "none",
-    [theme.breakpoints.up("sm")]: {
-      display: "block",
+    customizeToolbar: {
+      minHeight: 65,
     },
-  },
-  appBar: {
-    [theme.breakpoints.up("sm")]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
-    },
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up("sm")]: {
-      display: "none",
-    },
-  },
-  // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  content: {
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: drawerWidth,
-      width: `calc(100% - ${drawerWidth}px)`,
-    },
-    //  flexGrow: 1,
-    padding: theme.spacing(0),
-  },
-  avatar: {
-    backgroundColor: red[500],
-  },
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(4),
-      width: "auto",
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  inputRoot: {
-    color: "inherit",
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "36ch",
-      "&:focus": {
-        width: "26ch",
+    drawer: {
+      [theme.breakpoints.up("sm")]: {
+        width: drawerWidth,
+        flexShrink: 0,
       },
     },
-  },
-  sectionDesktop: {
-    display: "none",
-    position: "absolute",
-    right: theme.spacing(7),
-
-    [theme.breakpoints.up("md")]: {
-      display: "flex",
-      //justifyContent: "flex-end",
-    },
-  },
-  sectionMobile: {
-    display: "flex",
-    [theme.breakpoints.up("md")]: {
+    title: {
       display: "none",
+      [theme.breakpoints.up("sm")]: {
+        display: "block",
+      },
     },
-  },
-  largeButton: {
-    padding: 0,
-  },
-  largeIcon: {
-    fontSize: "1.5em",
-  },
-}));
+    appBar: {
+      [theme.breakpoints.up("sm")]: {
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: drawerWidth,
+      },
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+      [theme.breakpoints.up("sm")]: {
+        display: "none",
+      },
+    },
+    // necessary for content to be below app bar
+    toolbar: theme.mixins.toolbar,
+    drawerPaper: {
+      width: drawerWidth,
+    },
+    content: {
+      [theme.breakpoints.up("sm")]: {
+        marginLeft: drawerWidth,
+        width: `calc(100% - ${drawerWidth}px)`,
+      },
+      //  flexGrow: 1,
+      padding: theme.spacing(0),
+    },
+    avatar: {
+      backgroundColor: red[500],
+    },
+    search: {
+      position: "relative",
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor: fade(theme.palette.common.white, 0.15),
+      "&:hover": {
+        backgroundColor: fade(theme.palette.common.white, 0.25),
+      },
+      marginRight: theme.spacing(2),
+      marginLeft: 0,
+      width: "100%",
+      [theme.breakpoints.up("sm")]: {
+        marginLeft: theme.spacing(4),
+        width: "auto",
+      },
+    },
+    searchIcon: {
+      padding: theme.spacing(0, 2),
+      height: "100%",
+      position: "absolute",
+      pointerEvents: "none",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    inputRoot: {
+      color: "inherit",
+    },
+    inputInput: {
+      padding: theme.spacing(1, 1, 1, 0),
+      // vertical padding + font size from searchIcon
+      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+      transition: theme.transitions.create("width"),
+      width: "100%",
+      [theme.breakpoints.up("md")]: {
+        width: "36ch",
+        "&:focus": {
+          width: "26ch",
+        },
+      },
+    },
+    sectionDesktop: {
+      display: "none",
+      position: "absolute",
+      right: theme.spacing(7),
 
-function CustomHeader(props) {
+      [theme.breakpoints.up("md")]: {
+        display: "flex",
+        //justifyContent: "flex-end",
+      },
+    },
+    sectionMobile: {
+      display: "flex",
+      [theme.breakpoints.up("md")]: {
+        display: "none",
+      },
+    },
+    largeButton: {
+      padding: 0,
+    },
+    largeIcon: {
+      fontSize: "1.5em",
+    },
+    largeAvatar: {
+      width: theme.spacing(10),
+      height: theme.spacing(10),
+    },
+  }));
   console.log("====================================");
   console.log("HEADER");
   console.log(props.history.location);
@@ -234,6 +282,7 @@ function CustomHeader(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [anchorElAvatar, setAnchorElAvatar] = React.useState(null);
   //const [cartBadge, setCartBadge] = React.useState("0");
   //   const cartBadge = useSelector((state) => state.counter.counter);
   const orderBadge = useSelector((state) => state.order.order);
@@ -246,7 +295,6 @@ function CustomHeader(props) {
   //   return props.history.location.pathname == "/" && isLoggedInRedux;
   // });
 
-  const isLoggedInRedux = useSelector((state) => state.login.isloggedin);
   console.log("Is logged in header line 239: " + isLoggedInRedux);
   // console.log("Is logged in header: " + userService.isLoggedin());
   const dispatch = useDispatch();
@@ -287,6 +335,14 @@ function CustomHeader(props) {
       }
     }
   };
+
+  const handleClickAvatar = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseAvtar = () => {
+    setAnchorEl(null);
+  };
   // const buttonClick = () => {
   //   console.log("Notification");
   //   addNotification({
@@ -304,7 +360,7 @@ function CustomHeader(props) {
   if (isTabletOrMobile) {
   } else {
   }
-  const classes = useStyles(isTabletOrMobile);
+  const classes = useStyles();
 
   //   React.useEffect(() => {
   //     productService
@@ -385,8 +441,78 @@ function CustomHeader(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        {/* <Grid container> */}
+        {/* <Grid item xs={2}> */}
+        {isLoggedInRedux ? (
+          <>
+            <Avatar
+              style={{ marginRight: "10px" }}
+              anchorEl={anchorElAvatar}
+              onClick={handleClickAvatar}
+              aria-label="recipe"
+              className={`${classes.largeAvatar} ${classes.avatar}`}
+              src={
+                userService.getloggedinuser().imageUrl
+                  ? userService.getloggedinuser().imageUrl
+                  : userService.getloggedinuser().picture
+                  ? userService.getloggedinuser().picture.data.url
+                  : null
+              }
+            >
+              {userService.getloggedinuser().name
+                ? userService.getloggedinuser().name[0].toUpperCase()
+                : null}
+            </Avatar>
+            <Grid container>
+              <Grid item xs={12}>
+                {" "}
+                <Typography variant="h6">
+                  {userService.getloggedinuser().name}
+                </Typography>
+                <Typography>
+                  {userService.getloggedinuser().email
+                    ? userService.getloggedinuser().email
+                    : userService.getUserDetails().email}
+                </Typography>
+              </Grid>
+            </Grid>
+          </>
+        ) : (
+          <></>
+        )}
+      </MenuItem>
+      <Divider />
+      <MenuItem onClick={handleMenuClose}>
+        <ListItem
+          button
+          onClick={() => {
+            userService.logout();
+            dispatch(falseLogin());
+            if (isTabletOrMobileDevice) props.handleDrawerToggle();
+          }}
+        >
+          <ListItemIcon>
+            <ExitToAppIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Sign out"} />
+        </ListItem>
+      </MenuItem>
+      <Divider />
+      <MenuItem onClick={handleMenuClose}>
+        <ListItem
+          button
+          onClick={() => {
+            props.history.push("/userdashboard");
+          }}
+        >
+          <ListItemIcon>
+            <SettingsIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Dashboard"} />
+        </ListItem>
+      </MenuItem>
+      <Divider />
     </Menu>
   );
   const mobileMenuId = "primary-search-account-menu-mobile";
@@ -514,197 +640,12 @@ function CustomHeader(props) {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      {props.history.location.pathname != "/" ? (
-        <AppBar position="fixed" className={classes.appBar}>
-          <Toolbar className={classes.customizeToolbar}>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              className={classes.menuButton}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography className={classes.title} variant="h6" noWrap>
-              Trakouts
-            </Typography>
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <Autocomplete
-                className={classes.inputInput}
-                options={top100Films}
-                getOptionLabel={(option) => option.name}
-                onInputChange={(event, value) => {
-                  setSearchTextField(value);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    onChange={(e) => {
-                      setSearchTextField(e.target.value);
-                    }}
-                    value={searchTextField}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Search…"
-                    {...params}
-                    // renderInput={(params) => (
-                    //   <InputBase
-                    //     placeholder="Search…"
-                    //     ref={params.ref}
-                    //     ref={params.InputProps.ref}
-                    //     inputProps={params.inputProps}
-                    //     inputProps={{ "aria-label": "search" }}
-                    //   />
-                    // )}
-                  />
-                )}
-              />
-              {/* <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": "search" }}
-            ></InputBase> */}
-            </div>
-            <div className={classes.grow} />
-            <div className={classes.sectionDesktop}>
-              {isLoggedInRedux ? (
-                <span>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => {
-                      userService.logout();
-                      dispatch(falseLogin());
-                    }}
-                  >
-                    <Typography variant="button" variant="h6">
-                      Sign out
-                    </Typography>
-                  </Button>
-                </span>
-              ) : (
-                <div>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => {
-                      props.history.push("/signin");
-                    }}
-                  >
-                    <Typography variant="button" variant="h6">
-                      Sign in
-                    </Typography>
-                  </Button>
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      props.history.push("/signup");
-                    }}
-                    variant="outlined"
-                    color="secondary"
-                    style={{ marginLeft: "8px" }}
-                  >
-                    <Typography variant="button" variant="h6">
-                      Register
-                    </Typography>
-                  </Button>
-                </div>
-              )}
-              {isLoggedInRedux && userService.isAdmin() ? (
-                <IconButton
-                  aria-label="show 4 new mails"
-                  color="inherit"
-                  onClick={() => {
-                    props.history.push("/admindashboard");
-                  }}
-                >
-                  <Badge badgeContent={orderBadge} color="secondary">
-                    <MessageIcon />
-                  </Badge>
-                </IconButton>
-              ) : (
-                <></>
-              )}
-              {/* <IconButton
-              aria-label="show 17 new notifications"
-              color="inherit"
-              onClick={() => {
-                props.history.push("/cart");
-              }}
-            >
-              <Badge badgeContent={10} color="secondary">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton> */}
-              <IconButton
-                aria-label="show 17 new notifications"
-                color="inherit"
-                onClick={() => {
-                  props.setDark(!props.dark);
-                }}
-              >
-                <Badge color="secondary">
-                  <Brightness4Icon />
-                </Badge>
-              </IconButton>
-              {/* <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton> */}
-              {/* <div>
-              {userService.getloggedinuser()
-                ? userService.getloggedinuser()._id
-                : null}
-            </div> */}
-              {isLoggedInRedux ? (
-                <Tooltip title={userService.getloggedinuser().name}>
-                  <span style={{ margin: "auto", marginLeft: "10px" }}>
-                    <Avatar
-                      aria-label="recipe"
-                      className={classes.avatar}
-                      src={handleAvatarImage}
-                    >
-                      {userService.getloggedinuser().name
-                        ? userService.getloggedinuser().name[0].toUpperCase()
-                        : null}
-                    </Avatar>
-                  </span>
-                </Tooltip>
-              ) : (
-                <></>
-              )}
-            </div>
 
-            <div className={classes.sectionMobile}>
-              <IconButton
-                className={classes.largeButton}
-                aria-label="show more"
-                aria-controls={mobileMenuId}
-                aria-haspopup="true"
-                onClick={handleMobileMenuOpen}
-                color="inherit"
-              >
-                <MoreIcon className={classes.largeIcon} />
-              </IconButton>
-            </div>
-          </Toolbar>
-        </AppBar>
-      ) : (
-        <></>
-      )}
-      {isLoggedInRedux ? (
+      {(isLoggedInRedux &&
+        (props.history.location.pathname != "/signin" ||
+          props.history.location.pathname != "/signup")) ||
+      (props.history.location.pathname != "/signin" &&
+        props.history.location.pathname != "/signup") ? (
         <AppBar position="fixed" className={classes.appBar}>
           <Toolbar className={classes.customizeToolbar}>
             <IconButton
@@ -843,6 +784,28 @@ function CustomHeader(props) {
                   <Brightness4Icon />
                 </Badge>
               </IconButton>
+              <IconButton
+                aria-label="show 17 new notifications"
+                color="inherit"
+                onClick={() => {
+                  props.history.push("/faq");
+                }}
+              >
+                <Badge color="secondary">
+                  <HelpIcon />
+                </Badge>
+              </IconButton>
+              <IconButton
+                aria-label="show 17 new notifications"
+                color="inherit"
+                onClick={() => {
+                  props.history.push("/pricing");
+                }}
+              >
+                <Badge color="secondary">
+                  <MonetizationOnIcon />
+                </Badge>
+              </IconButton>
               {/* <IconButton
               edge="end"
               aria-label="account of current user"
@@ -862,6 +825,8 @@ function CustomHeader(props) {
                 <Tooltip title={userService.getloggedinuser().name}>
                   <span style={{ margin: "auto", marginLeft: "10px" }}>
                     <Avatar
+                      anchorEl={anchorElAvatar}
+                      onClick={handleClickAvatar}
                       aria-label="recipe"
                       className={classes.avatar}
                       src={
@@ -871,12 +836,6 @@ function CustomHeader(props) {
                           ? userService.getloggedinuser().picture.data.url
                           : null
                       }
-
-                      // src={
-                      //   userService.getloggedinuser().imageUrl
-                      //     ? userService.getloggedinuser().imageUrl
-                      //     : null
-                      // }
                     >
                       {userService.getloggedinuser().name
                         ? userService.getloggedinuser().name[0].toUpperCase()
@@ -940,16 +899,27 @@ function CustomHeader(props) {
       </nav>
 
       <main className={classes.content}>
-        {props.history.location.pathname != "/" ? (
+        {/* {props.history.location.pathname != "/" ? (
+          <div className={classes.toolbar} />
+        ) : (
+          <></>
+        )} */}
+        {(isLoggedInRedux &&
+          (props.history.location.pathname != "/signin" ||
+            props.history.location.pathname != "/signup")) ||
+        (props.history.location.pathname != "/signin" &&
+          props.history.location.pathname != "/signup") ? (
           <div className={classes.toolbar} />
         ) : (
           <></>
         )}
-        {isLoggedInRedux && props.history.location.pathname == "/" ? (
+        {/* {(isLoggedInRedux && props.history.location.pathname != "/") ||
+        isLoggedInRedux ||
+        props.history.location.pathname != "/" ? (
           <div className={classes.toolbar} />
         ) : (
           <></>
-        )}
+        )} */}
         <Routes />
       </main>
     </div>
