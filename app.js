@@ -22,7 +22,7 @@ const corsOptions = {
   //origin: "http://ec2-18-224-94-239.us-east-2.compute.amazonaws.com",
   // origin: "http://ec2-3-135-218-85.us-east-2.compute.amazonaws.com",
   // origin: "http://localhost:3000",
-  origin: "https://www.trakouts.com",
+  origin: "https://trakouts.com",
   preflightContinue: false,
 };
 

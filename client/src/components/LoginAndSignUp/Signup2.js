@@ -301,7 +301,7 @@ const Signup2 = (props) => {
                     alignItems="center"
                   >
                     <GoogleLogin
-                      clientId="979963542445-pc65c77tmrn68f5m5iivgktli9ccq3m4.apps.googleusercontent.com"
+                      clientId="979963542445-vuvcfpt5nujiv07t47oigka3ak6ghghm.apps.googleusercontent.com"
                       buttonText="Login"
                       onSuccess={handleGoogleLogin}
                       onFailure={handleErrorGoogleLogin}
