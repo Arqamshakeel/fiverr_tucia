@@ -196,6 +196,7 @@ router.get("/confirmEmail/:id/:key", async (req, res) => {
     return res.status(400).send("Invalid Link!");
   }
   console.log("YESSSS");
+  return res.send(new_password);
   return res.send(`<!DOCTYPE html>
   <html>
   <head>

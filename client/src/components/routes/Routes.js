@@ -21,6 +21,7 @@ import FAQ from "../faq/FAQ";
 import Questions from "../faq/Questions";
 import FaqAdminPanel from "../faq/FaqAdminPanel";
 import ForgotPassword from "../LoginAndSignUp/ForgotPassword";
+import ForgotPasswordTemplate from "../LoginAndSignUp/ForgotPasswordTemplate";
 const Routes = () => {
   const isDesktopOrLaptop = useMediaQuery({
     query: "(min-device-width: 1224px)",
@@ -46,6 +47,11 @@ const Routes = () => {
         <Route path="/questions/:id" exact component={Questions} />
         <Route path="/faqadminpanel" exact component={FaqAdminPanel} />
         <Route path="/forgotpassword" exact component={ForgotPassword} />
+        <Route
+          path="/users/confirmEmail/:id/:key"
+          exact
+          component={ForgotPasswordTemplate}
+        />
       </Switch>
       <Footer />
       {isTabletOrMobileDevice ? (
