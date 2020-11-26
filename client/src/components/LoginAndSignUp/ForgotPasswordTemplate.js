@@ -42,6 +42,10 @@ function Copyright() {
 const ForgotPasswordTemplate = (props) => {
   const [pass, setPass] = React.useState("");
   React.useEffect(() => {
+    console.log("====================================");
+    console.log(props.match.params.id);
+    console.log(props.match.params.key);
+    console.log("====================================");
     userService
       .forgetPasswordTemplate(props.match.params.id, props.match.params.key)
       .then((r) => {
@@ -56,6 +60,6 @@ const ForgotPasswordTemplate = (props) => {
         console.log("====================================");
       });
   }, []);
-  return <div>{pass}</div>;
+  return <div>{pass} HElloooooooooooo</div>;
 };
 export default ForgotPasswordTemplate;
