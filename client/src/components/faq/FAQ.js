@@ -1,5 +1,7 @@
 import { Button, Grid, makeStyles, Typography } from "@material-ui/core";
 import React from "react";
+import faqService from "../../services/FaqService";
+import MaterialSnackBar from "../snackBar/MaterialSnackBar";
 import AddFAB from "./AddFAB";
 import MediaCard from "./MediaCard";
 const useStyles = makeStyles({
@@ -9,7 +11,21 @@ const useStyles = makeStyles({
 });
 const FAQ = (props) => {
   const classes = useStyles();
+  const [snackBarOpen, setSnackBarOpen] = React.useState(false);
+  const [snackBarMsg, setSnackBarMsg] = React.useState("");
+  const [topics, setTopics] = React.useState([]);
 
+  React.useEffect(() => {
+    faqService
+      .GetAllTopicDesc()
+      .then((res) => {
+        console.log("====================================");
+        console.log(res);
+        setTopics(res);
+        console.log("====================================");
+      })
+      .catch((err) => {});
+  }, []);
   return (
     <div>
       <div style={{ height: "200px", background: "#ff6666" }}>
@@ -46,8 +62,15 @@ const FAQ = (props) => {
         </Grid>
       </div>
       <div style={{ margin: "20px 100px 100px 100px" }}>
-        <MediaCard />
-        <MediaCard />
+        <MaterialSnackBar
+          open={snackBarOpen}
+          setOpen={setSnackBarOpen}
+          materialMessage={snackBarMsg}
+        />
+        {topics.map((item, index) => {
+          return <MediaCard data={item} key={index} />;
+        })}
+
         <AddFAB />
       </div>
     </div>

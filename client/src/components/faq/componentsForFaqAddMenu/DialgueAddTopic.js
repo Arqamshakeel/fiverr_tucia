@@ -10,6 +10,8 @@ import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import { TextField } from "@material-ui/core";
+import faqService from "../../../services/FaqService";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -22,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DialgueAddTopic() {
+export default function DialgueAddTopic(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [age, setAge] = React.useState("");
@@ -36,7 +38,32 @@ export default function DialgueAddTopic() {
   };
 
   const handleClose = () => {
+    if (!props.newTopicString) return;
     setOpen(false);
+  };
+  const handleCancelClose = () => {
+    setOpen(false);
+  };
+  const handleSubmit = () => {
+    if (!props.newTopicString) return;
+    faqService
+      .PostNewTopic({ topic: props.newTopicString })
+      .then((res) => {
+        props.setOpen(true);
+        props.materialMessage(
+          "Added Topic " +
+            '"' +
+            props.newTopicString.substring(0, 16) +
+            `${props.newTopicString.length > 15 ? "..." : null}` +
+            '"'
+        );
+        props.setUpdateTopicList(!props.updateTopicList);
+      })
+      .catch((err) => {
+        props.setOpen(true);
+
+        props.materialMessage(err.response.data);
+      });
   };
 
   return (
@@ -52,43 +79,38 @@ export default function DialgueAddTopic() {
         <DialogContent>
           <form className={classes.container}>
             <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="demo-dialog-native">Age</InputLabel>
-              <Select
-                native
-                value={age}
-                onChange={handleChange}
-                input={<Input id="demo-dialog-native" />}
-              >
-                <option aria-label="None" value="" />
-                <option value={10}>Ten</option>
-                <option value={20}>Twenty</option>
-                <option value={30}>Thirty</option>
-              </Select>
-            </FormControl>
-            <FormControl className={classes.formControl}>
-              <InputLabel id="demo-dialog-select-label">Age</InputLabel>
-              <Select
-                labelId="demo-dialog-select-label"
-                id="demo-dialog-select"
-                value={age}
-                onChange={handleChange}
-                input={<Input />}
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-              </Select>
+              <TextField
+                variant="filled"
+                margin="normal"
+                required
+                fullWidth
+                error={!props.newTopicString ? true : false}
+                helperText={!props.newTopicString ? "Cannot be empty" : null}
+                label="New Topic"
+                value={props.newTopicString}
+                onChange={(e) => {
+                  props.setNewTopicString(e.target.value);
+                }}
+              />
             </FormControl>
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button
+            onClick={() => {
+              handleCancelClose();
+            }}
+            color="primary"
+          >
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button
+            onClick={() => {
+              handleClose();
+              handleSubmit();
+            }}
+            color="primary"
+          >
             Ok
           </Button>
         </DialogActions>

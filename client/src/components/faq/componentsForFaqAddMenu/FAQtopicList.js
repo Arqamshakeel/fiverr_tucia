@@ -61,13 +61,13 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function FAQtopicList() {
+export default function FAQtopicList(props) {
   const classes = useStyles();
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
 
   const handleChange = (event) => {
-    setPersonName(event.target.value);
+    props.setTopicSelected(event.target.value);
+    props.setTopicName(event.target.value);
   };
 
   const handleChangeMultiple = (event) => {
@@ -78,7 +78,7 @@ export default function FAQtopicList() {
         value.push(options[i].value);
       }
     }
-    setPersonName(value);
+    props.setTopicSelected(value);
   };
 
   return (
@@ -87,28 +87,27 @@ export default function FAQtopicList() {
         <InputLabel id="demo-mutiple-chip-label">Select Topic</InputLabel>
         <Select
           labelId="demo-mutiple-chip-label"
-          id="demo-mutiple-chip"
-          value={personName}
+          value={props.topicSelected}
           onChange={handleChange}
           input={<Input id="select-multiple-chip" />}
           renderValue={(selected) => (
             <div className={classes.chips}>
               <Chip
-                key={personName}
-                label={personName}
+                key={props.topicSelected}
+                label={props.topicSelected}
                 className={classes.chip}
               />
             </div>
           )}
           MenuProps={MenuProps}
         >
-          {names.map((name) => (
+          {props.topicList.map((name, index) => (
             <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
+              key={index}
+              value={name.substring(0, 19) + `${name.length > 19 ? "..." : ""}`}
+              style={getStyles(name, props.topicSelected, theme)}
             >
-              {name}
+              {name.substring(0, 19) + `${name.length > 19 ? "..." : ""}`}
             </MenuItem>
           ))}
         </Select>

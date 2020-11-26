@@ -33,7 +33,7 @@ const MediaCard = (props) => {
       <Card className={classes.root}>
         <CardActionArea
           onClick={() => {
-            props.history.push("/questions");
+            props.history.push("/questions/" + props.data._id);
           }}
         >
           <Grid container>
@@ -62,7 +62,7 @@ const MediaCard = (props) => {
                   component="h2"
                   color="initial"
                 >
-                  Lizard
+                  {props.data.topicName}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   Lizards are a widespread group of squamate reptiles, with over

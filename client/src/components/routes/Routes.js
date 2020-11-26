@@ -42,7 +42,7 @@ const Routes = () => {
         <Route path="/admindashboard" exact component={AdminTabs} />
         <Route path="/pricing" exact component={Pricing} />
         <Route path="/faq" exact component={FAQ} />
-        <Route path="/questions" exact component={Questions} />
+        <Route path="/questions/:id" exact component={Questions} />
         <Route path="/faqadminpanel" exact component={FaqAdminPanel} />
       </Switch>
       <Footer />

@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function QuestionAccordation() {
+export default function QuestionAccordation(props) {
   const classes = useStyles();
 
   return (
@@ -28,24 +28,14 @@ export default function QuestionAccordation() {
           id="panel1a-header"
         >
           <Typography className={classes.heading}>
-            What really trakouts.com is?
+            {props.data.articleName}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget. Lorem ipsum
-            dolor sit amet, consectetur adipisicing elit. Aut tempore architecto
-            repellendus odio aspernatur vero unde minima laudantium commodi
-            velit quibusdam, adipisci doloribus vitae possimus quis iste eveniet
-            pariatur. Nihil. Lorem ipsum dolor sit, amet consectetur adipisicing
-            elit. Earum ab et dolor exercitationem cumque? Aliquam iure est
-            tenetur impedit? Est recusandae aliquid maiores exercitationem?
-            Pariatur labore id quo recusandae quia?
-          </Typography>
+          <Typography>{props.data.articleHTML}</Typography>
         </AccordionDetails>
       </Accordion>
-      <Accordion>
+      {/* <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel2a-content"
@@ -59,8 +49,8 @@ export default function QuestionAccordation() {
             malesuada lacus ex, sit amet blandit leo lobortis eget.
           </Typography>
         </AccordionDetails>
-      </Accordion>
-      <Accordion disabled>
+      </Accordion> */}
+      {/* <Accordion disabled>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel3a-content"
@@ -70,7 +60,7 @@ export default function QuestionAccordation() {
             Disabled Accordion
           </Typography>
         </AccordionSummary>
-      </Accordion>
+      </Accordion> */}
     </div>
   );
 }

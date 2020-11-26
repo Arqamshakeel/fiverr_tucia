@@ -30,6 +30,7 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var storageRouter = require("./routes/storage");
 var finalOrderRouter = require("./routes/finalorder");
+var faqRouter = require("./routes/faq");
 //
 //const path = require("path");
 const crypto = require("crypto");
@@ -54,6 +55,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/faq", faqRouter);
 app.use("/order", finalOrderRouter);
 app.use("/storage", storageRouter);
 

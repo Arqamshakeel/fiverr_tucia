@@ -10,6 +10,7 @@ var userSchema = mongoose.Schema({
   socialId: String,
   socialType: String,
   role: { type: Boolean, default: false },
+  forgetConfirmation: String,
 });
 var User = mongoose.model("users", userSchema);
 
