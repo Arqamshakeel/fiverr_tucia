@@ -96,7 +96,7 @@ class UserService extends GenericService {
 
   getUserDetails = (id) => this.get("users/details/" + id);
   updateUserDetails = (id, data) => this.post("users/details/" + id, data);
-  forgetPassword = (data) => this.post("users/forgetPassword", data);
+  forgetPassword = (data) => this.post("forgetPassword", data);
   forgetPasswordTemplate = (id, key) =>
     this.get("users/confirmEmail/" + id + "/" + key);
 

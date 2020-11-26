@@ -47,11 +47,11 @@ const Routes = () => {
         <Route path="/questions/:id" exact component={Questions} />
         <Route path="/faqadminpanel" exact component={FaqAdminPanel} />
         <Route path="/forgotpassword" exact component={ForgotPassword} />
-        <Route
+        {/* <Route
           path="/users/confirmEmail/:id/:key"
           exact
           component={ForgotPasswordTemplate}
-        />
+        /> */}
       </Switch>
       <Footer />
       {isTabletOrMobileDevice ? (
