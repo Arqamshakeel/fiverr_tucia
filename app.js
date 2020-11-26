@@ -25,8 +25,8 @@ const corsOptions = {
   origin: "https://trakouts.com",
   preflightContinue: false,
 };
-
-router.get("/google4fffefe23182bc58.html", async (req, res) => {
+var app = express();
+app.get("/google4fffefe23182bc58.html", async (req, res) => {
   return res.send(`google-site-verification: google4fffefe23182bc58.html`);
 });
 
@@ -43,7 +43,7 @@ const multer = require("multer");
 const GridFsStorage = require("multer-gridfs-storage");
 const Grid = require("gridfs-stream");
 //
-var app = express();
+
 app.use(cors(corsOptions));
 const methodOverride = require("method-override");
 app.use(methodOverride("_method"));
