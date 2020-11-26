@@ -26,6 +26,10 @@ const corsOptions = {
   preflightContinue: false,
 };
 
+router.get("/google4fffefe23182bc58.html", async (req, res) => {
+  return res.send(`google-site-verification: google4fffefe23182bc58.html`);
+});
+
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var storageRouter = require("./routes/storage");
