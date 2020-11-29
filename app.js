@@ -25,15 +25,15 @@ const corsOptions = {
   methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
   //origin: "http://ec2-18-224-94-239.us-east-2.compute.amazonaws.com",
   // origin: "http://ec2-3-135-218-85.us-east-2.compute.amazonaws.com",
-  origin: "http://localhost:3000",
-  // origin: "https://trakouts.com",
+  // origin: "http://localhost:3000",
+  origin: "https://trakouts.com",
   preflightContinue: false,
 };
 var app = express();
-app.post("/forgetPassword", async (req, res) => {
+app.post("/forgetPassword/:email", async (req, res) => {
   // console.log(req.params.id);
   console.log(req.body.email + "hello");
-  let user = await User.findOne({ email: req.body.email, socialType: "no" });
+  let user = await User.findOne({ email: req.params.email, socialType: "no" });
   if (!user)
     return res.status(400).send("Sorry no account found with this email.");
   console.log(user);
@@ -51,8 +51,8 @@ app.post("/forgetPassword", async (req, res) => {
 
   console.log(password);
 
-  console.log(req.body.email);
-  await sendConfirmationMail(req.body.email, password, id);
+  console.log(req.params.email);
+  await sendConfirmationMail(req.params.email, password, id);
   // await sendMail(req.body.email, password);
   return res.status(200).send();
 });
@@ -390,7 +390,7 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "/client/build/index.html"));
 });
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Origin", "https://trakouts.com");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
