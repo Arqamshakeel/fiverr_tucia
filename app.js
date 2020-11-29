@@ -56,7 +56,7 @@ app.post("/forgetPassword", async (req, res) => {
   // await sendMail(req.body.email, password);
   return res.status(200).send();
 });
-app.get("/confirmEmail/:id/:key", async (req, res) => {
+app.get("/confirmEmail/:id/:key.html", async (req, res) => {
   console.log(req.params.id);
   console.log(req.params.key);
   let key = req.params.key;
@@ -75,7 +75,7 @@ app.get("/confirmEmail/:id/:key", async (req, res) => {
     user.password = await bcrypt.hash(new_password, salt);
     await user.save();
   } else {
-    return res.status(400).send("Invalid Link!");
+    return res.status(400).send("Invalid Link! app.js");
   }
   console.log("YESSSS");
   // return res.send(new_password);
