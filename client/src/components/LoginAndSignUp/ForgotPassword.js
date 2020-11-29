@@ -118,11 +118,11 @@ const ForgotPassword = (props) => {
           setLoginProgress(false);
           console.log(error);
           setOpen(true);
-          setmsg(error.response.data);
+          // setmsg(error.response.data);
         });
     } else {
       setOpen(true);
-      setmsg("Invalid email.");
+      setmsg("Invalid email.2");
     }
   };
 

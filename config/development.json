@@ -2,8 +2,9 @@
   "db": "mongodb://localhost/FamilyMart",
   "jwt": "SomeKey",
   "prod": "mongodb+srv://arqam:arqam@mern1-siiuo.mongodb.net/FamilyMart",
-  "base":"https://trakouts.com",
-  "base1":"http://localhost:3000",
+  "base1":"https://trakouts.com",
+  "base":"http://localhost:3000",
+  "serverbase":"https://trakouts.com",
   "trakoutsGmailPassword":"fiverr123!",
   "trakoutsGmail":"trakouts@gmail.com"
 

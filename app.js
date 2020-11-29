@@ -30,10 +30,45 @@ const corsOptions = {
   preflightContinue: false,
 };
 var app = express();
-app.post("/forgetPassword/:email", async (req, res) => {
+
+app.get("/google4fffefe23182bc58.html", async (req, res) => {
+  return res.send(`google-site-verification: google4fffefe23182bc58.html`);
+});
+
+var indexRouter = require("./routes/index");
+var usersRouter = require("./routes/users");
+var storageRouter = require("./routes/storage");
+var finalOrderRouter = require("./routes/finalorder");
+var faqRouter = require("./routes/faq");
+//
+//const path = require("path");
+const crypto = require("crypto");
+const mongoose = require("mongoose");
+const multer = require("multer");
+const GridFsStorage = require("multer-gridfs-storage");
+const Grid = require("gridfs-stream");
+//
+
+app.use(cors(corsOptions));
+const methodOverride = require("method-override");
+const { User } = require("./mongooseModels/model.users");
+app.use(methodOverride("_method"));
+// view engine setup
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "jade");
+
+app.use(logger("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
+
+// app.use("/", indexRouter);
+
+app.post("/forgetPassword/:emaill", async (req, res) => {
   // console.log(req.params.id);
-  console.log(req.params.email + "hello");
-  let user = await User.findOne({ email: req.params.email, socialType: "no" });
+  console.log(req.params.emaill + "hello");
+  let user = await User.findOne({ email: req.params.emaill, socialType: "no" });
   if (!user)
     return res.status(400).send("Sorry no account found with this email.");
   console.log(user);
@@ -51,8 +86,9 @@ app.post("/forgetPassword/:email", async (req, res) => {
 
   console.log(password);
 
-  console.log(req.params.email);
-  await sendConfirmationMail(req.params.email, password, id);
+  console.log(req.params.emaill);
+  console.log("AT SENDING....");
+  await sendConfirmationMail(req.params.emaill, password, id);
   // await sendMail(req.body.email, password);
   return res.status(200).send();
 });
@@ -336,8 +372,8 @@ async function sendConfirmationMail(r_email, key, id) {
     subject: "Recovery for trakouts login passoword", // Subject line
     text: `Hello ${r_email}, Your new trakouts password is `, // plain text body
     html: `<div><p>Ignore this email if you have not applied for password recovery for trakouts.</p><b><a href=${config.get(
-      "base"
-    )}/confirmEmail/${id}/${key}>Click this link to confirm and to Redirect to a new page</a></b></div>`, // html body
+      "serverbase"
+    )}/confirmEmail/${id}/${key}.html>Click this link to confirm and to Redirect to a new page</a></b></div>`, // html body
   });
 
   console.log("Message sent: %s", info.messageId);
@@ -347,39 +383,7 @@ async function sendConfirmationMail(r_email, key, id) {
   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
   // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 }
-app.get("/google4fffefe23182bc58.html", async (req, res) => {
-  return res.send(`google-site-verification: google4fffefe23182bc58.html`);
-});
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-var storageRouter = require("./routes/storage");
-var finalOrderRouter = require("./routes/finalorder");
-var faqRouter = require("./routes/faq");
-//
-//const path = require("path");
-const crypto = require("crypto");
-const mongoose = require("mongoose");
-const multer = require("multer");
-const GridFsStorage = require("multer-gridfs-storage");
-const Grid = require("gridfs-stream");
-//
-
-app.use(cors(corsOptions));
-const methodOverride = require("method-override");
-const { User } = require("./mongooseModels/model.users");
-app.use(methodOverride("_method"));
-// view engine setup
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "jade");
-
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
-
-// app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/faq", faqRouter);
 app.use("/order", finalOrderRouter);
@@ -390,6 +394,7 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "/client/build/index.html"));
 });
 app.use(function (req, res, next) {
+  // res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   res.header("Access-Control-Allow-Origin", "https://trakouts.com");
   res.header(
     "Access-Control-Allow-Headers",
