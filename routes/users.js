@@ -145,32 +145,32 @@ router.post("/details/:id", async (req, res) => {
   return res.status(200).send("Password successfully changed!");
 });
 
-router.post("/forgetPassword", async (req, res) => {
-  // console.log(req.params.id);
-  console.log(req.body.email + "hello");
-  let user = await User.findOne({ email: req.body.email, socialType: "no" });
-  if (!user)
-    return res.status(400).send("Sorry no account found with this email.");
-  console.log(user);
-  let id = user._id;
-  // let user = await User.findById(req.params.id);
-  // if (!user) res.status(400).send("User does not exists!");
+// router.post("/forgetPassword", async (req, res) => {
+//   // console.log(req.params.id);
+//   console.log(req.body.email + "hello");
+//   let user = await User.findOne({ email: req.body.email, socialType: "no" });
+//   if (!user)
+//     return res.status(400).send("Sorry no account found with this email.");
+//   console.log(user);
+//   let id = user._id;
+//   // let user = await User.findById(req.params.id);
+//   // if (!user) res.status(400).send("User does not exists!");
 
-  var password = generator.generate({
-    length: 10,
-    numbers: true,
-  });
+//   var password = generator.generate({
+//     length: 10,
+//     numbers: true,
+//   });
 
-  user.forgetConfirmation = password;
-  await user.save();
+//   user.forgetConfirmation = password;
+//   await user.save();
 
-  console.log(password);
+//   console.log(password);
 
-  console.log(req.body.email);
-  await sendConfirmationMail(req.body.email, password, id);
-  // await sendMail(req.body.email, password);
-  return res.status(200).send();
-});
+//   console.log(req.body.email);
+//   await sendConfirmationMail(req.body.email, password, id);
+//   // await sendMail(req.body.email, password);
+//   return res.status(200).send();
+// });
 
 // confirmEmail/${id}/${key}
 //when user clicks the link in mail

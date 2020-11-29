@@ -106,10 +106,7 @@ const ForgotPassword = (props) => {
     if (ValidateEmail(email)) {
       setLoginProgress(true);
       userService
-        .forgetPassword(email, {
-          email: email.toLowerCase(),
-          password: password,
-        })
+        .forgetPassword(email.toLowerCase())
         .then(function (res) {
           setSucessOpen(true);
           setSucessMsg("Email sent to " + email.toLowerCase());

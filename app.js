@@ -32,7 +32,7 @@ const corsOptions = {
 var app = express();
 app.post("/forgetPassword/:email", async (req, res) => {
   // console.log(req.params.id);
-  console.log(req.body.email + "hello");
+  console.log(req.params.email + "hello");
   let user = await User.findOne({ email: req.params.email, socialType: "no" });
   if (!user)
     return res.status(400).send("Sorry no account found with this email.");
